@@ -1,0 +1,24 @@
+Plan pentru licenta
+
+1. Introducere
+???
+
+2. Preliminarii
+De explicat conceptele teoretice generale:
+- IoT
+- sisteme heterogene distribuite
+- event driven systems
+- testare, quality assurance
+
+De citat survey-uri si articole care prezinta state of the art-ul
+
+Descris tinta lucrarii
+
+3. Context, probleme, research questions
+
+4. Analiza a solutiilor alternative
+PatrIoT, alte lucrari similare
+
+5. Dataset, abordari proprii
+
+6. Evaluare
