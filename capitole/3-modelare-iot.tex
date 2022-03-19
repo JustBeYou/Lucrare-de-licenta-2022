@@ -1,0 +1,38 @@
+\chapter{Modelarea sistemelor Internet of Things}
+
+Pentru o analiză cât mai riguroasă este nevoie de o înțelegere profundă a sistemelor testate. În acest capitol vom oferi o imagine de ansamblu asupra rețelelor \acrshort{iot} ilustrând caracteristicile acestora cu exemple reale din diferite industrii. Pe baza exemplelor expuse vom discuta despre caracteristicile arhitecturale ale rețelelor, diferitele părți componente, topologiile comune și care este parcursul fluxurilor de date. Deoarece nu există o viziune unificată a modului în care ar trebui descrise arhitecturile acestor rețele particulare, vor fi expuse mai multe alternative și voi argumenta care este cea mai potrivită pentru a fi utilizată. 
+
+Arhitecturile specifice \acrshort{iot} impun anumite constrângeri metodelor de comunicație, așa că vom explora care sunt cele mai comune protocoale de comunicație utilizate, care sunt particularitățile lor și care este motivația din spatele utilizării acestora. Nu ne vom rezuma doar la protocoalele dintr-un singur nivel al modelului \acrfull{osi}, ci vom urmări o privire de ansamblu, un interes special va fi acordat protocoalelor precum \textit{Zig-Bee} care este proiectat special pentru \acrshort{iot} și se întinde pe mai multe nivele \acrshort{osi}.
+
+Canalele de comunicație au nevoie de părți comunicante, așa că vom continua prin a analiza dispozitivele și caracteristicile acestora utilizate în sistemele \acrshort{iot}, un punct important în această discuție fiind despre limitările hardware impuse de eficiența costurilor și cum acest aspect afectează capabilitățile de securitate. Deoarece software-ul este strâns legat de hardware în acest domeniu discuția va fi extinsă și asupra interacțiunii dintre cele două, în special despre modul în care dezvoltarea sau testarea uneia dintre componente o afectează pe cealaltă.
+
+În finalul capitolului vom trece din planul tehnic și tehnologic în cel teoretic și vom modela formal și riguros rețelele \acrshort{iot} folosindu-ne de teoria grafurilor și teoria automatelor finite. Vor fi descrise atât topologiile și fluxurile de date fizice, cât și fluxurile la nivel logic. Ne propunem să obținem o viziune clară asupra proprietăților acestor sisteme pentru a putea exprima mai ușor aspectele testate și pentru a deschide calea spre metode de testare formală cum ar fi cele bazate pe \acrfull{smt}.
+
+Un material suplimentar va fi reprezentat de un studiu de caz asupra sistemelor din locuințele inteligente unde vom identica aspectele discutate anterior și vom ilustra prin exemple aplicarea modelelor teoretice pentru descrierea unui astfel de sistem. Locuințele inteligente vor reprezenta exemplul principal în capitolele ce urmează atunci când vom aduce în prim plan tehnicile de testare.
+
+\section{Viziune de ansamblu}
+
+
+
+\section{Protocoale de comunicație}
+
+TODO: de vorbit despre protocoalele specifice
+
+TODO: de inclus rezumatul despre Event-Driven-Systems
+
+\section{Caracteristicile dispozitivelor}
+
+\section{Model teoretic}
+
+TODO: de citat paper-ul de la river
+
+% TODO: de citat paper-ul lui Stefanescu + Paduraru despre privitul ca graf
+% TODO: de vazut cum s-ar putea descrie state-ul retelei cu teorie de la automatele finite
+% TODO: de vorbit despre numarul imens de stari, caracterul continuu al masuratorilor, etc
+% TODO: de subliniat distinctia dinstre comunicarea logica (la nivel de flow) si comunicarea fizica (la nivel de protocol/device) si de modelat comunicarea logica
+
+\section{Studiu de caz: locuințe inteligente}
+
+TODO: de inclus rezumatul despre smart home thread modeling
+
+TODO: de inclus studiul de la trendmicro

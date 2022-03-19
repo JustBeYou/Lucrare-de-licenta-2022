@@ -1,0 +1,122 @@
+\chapter{Preliminarii}
+
+În acest capitol vor fi prezentate noțiuni introductive despre natura sistemelor \acrfull{iot}, o prezentare sumară a caracteristicilor acestora și a contextului în care sunt utilizate, dar și noțiuni generale despre testare, tipurile de testare și câteva particularități pentru domeniul de interes. Vom continua prin analiza a câtorva studii cantitative sistematice despre testarea \acrshort{iot} pentru o mai bună întelegere a contextului, provocărilor și soluțiilor existente. În final, vom stabili obiectivele lucrării și cum vor fi acestea realizate.
+
+% TODO: de mutat in capitoul 3
+%particularitățile teoretice și tehnice alături de exemple ilustrative din lumea reală. Deoarece este o nișă tânără fără un consens larg asupra modului de descriere al sistemelor și proprietăților, o bună parte a aspectelor prezentate vor reprezenta interpretarea proprie a noțiunilor extrase din literatura de specialitate a ultimilor ani. Vor fi prezentate succint noțiuni generale despre testarea aspectelor funcționale și nefuncționale a sistemelor, iar în final ne vom concentra asupra înțelegerii testării în contextul \acrshort{iot}, a particularităților și provocărilor aduse.
+
+\section{Noțiuni elementare}
+
+\subsection*{Despre IoT}
+
+% Ce este IoT? Definitie si exemple relevante de sisteme
+
+În analiza extensivă a literaturii \acrshort{iot} realizată de \cite{Nord2019} autorii au decis să utilizeze o definiție propusa de Ford Insights \cite{insight2017internet} (tradus din engleză):
+
+% In this research, the Internet of Things (IoT)
+% is defined as the interconnection of machines
+% and devices through the internet, enabling
+% the creation of data that can yield analytical
+% insights and support new operations. For
+% brevity and in keeping with current usage,
+% Forbes refers to major technology categories
+% such as IoT, artificial intelligence or robotics
+% as technologies. It is recognized that each of
+% the technology categories comprises multiple
+% technologies and capabilities. For example,
+% IoT is dependent upon sensors, wireless
+% communications, networks, cloud, storage, etc.
+
+\say{{[}...{]} \acrfull{iot} este definit ca interconectarea computerelor și dispozitivelor prin internet, dând posibilitatea de a genera date ce pot servi analizei și creerii de noi operațiuni. {[}...{]}}
+
+Alte lucrări precum \cite{Lee2015} și \cite{Huang2015} preferă definiții mai largi, considerând că orice dispozitiv fizic conectat la internet este parte a \acrshort{iot}. Pentru o viziune mai clară, vom considera că \textbf{\acrshort{iot}} este reprezentat de totalitatea dispozitivelor și computerelor conectate la internet, care colectează sau procesează date, ori interacționează cu mediul înconjurător. Astfel, acest tip de sisteme au caracter \emph{heterogen}, pot fi \emph{distribuite} pe spații geografice întinse, utilizează tehnologii de comunicare \emph{wireless} și cresc rapid în complexitate o dată cu extinderea datorită \emph{interconectării} unui număr mare de părți.
+
+% Ce sunt event-driven systems? Ce sunt sistemele heterogene?
+
+% https://docplayer.net/15630715-Event-driven-applications-costs-benefits-and-design-approaches-gartner-application-integration-and-web-services-summit-2006.html
+% https://www.redhat.com/en/topics/integration/what-is-event-driven-architecture
+
+Un mod important de a privi sistemele \acrshort{iot} este sa le vedem a fi \acrfull{edas}. Un \textbf{\acrshort{eda}} este un sistem construit în jurul producerii și consumului de \emph{evenimente}. Un eveniment reprezinta orice schimbare de stare a sistemului ca întreg. Acestea pot fi generate atât de senzori care monitorizează mediul, cât și de interacțiunea dintre om și computer sau simpla trecere a timpului. Transmiterea lor se poate face centralizat cu ajutorul unui distribuitor (\textit{message broker}) sau descentralizat în model \acrfull{p2p}. Consumatorii evenimentelor pot genera noi evenimente în urma procesării.
+
+Definim informal un sistem \emph{heterogen} fiind un sistem în care părțile sale componente au în general natură diferită, concret în cazul pe care îl tratăm, heterogenitatea este dată de varietatea dispozitivelor \emph{hardware}, tehnologiilor \emph{software} și de interconectarea unui număr mare de astfel de componente în medii impredictibile. Astfel, putem trage concluzia că un sistem \acrshort{iot} este un \acrshort{eda} cu caracter heterogen în care software-ul este strâns legat de hardware spre deosebire de computerele de uz general. 
+
+% Despre testare functionala si ne-functionala
+
+\subsection*{Despre testare}
+
+% TODO: de scris despre SUT - system under test
+
+\textbf{Testarea funcțională} a fost introdusă conceptual de \cite{Howden1980}, acesta propunând tratarea programelor ca o colecție integrată de funcții. Practicile și viziunile asupra metodelor de testare a aspectelor funcționale s-a rafinat continuu de-a lungul anilor, majoritatea eforturilor fiind îndreptate spre testarea software în medii izolate. În general, testarea funcțională presupune testarea comportamentului unui program în diferite scenarii ignorând detaliile de implementare, acesta fiind tratat ca un \textit{black box}. În contextul \acrshort{iot}, \cite{Corts2019} observă că majoritatea eforturilor de testare se duc spre aspectele funcționale, însă acestea reprezintă doar o singură piesă din multitudinea de de proprietăți ce asigură calitatea și buna funcționare a dispozitivelor.
+
+În cazul testării aspectelor funcționale putem împărți testarea pe mai multe nivele, acestea fiind în general considerate: testarea unitară, adică testarea izolata a unei singure funcționalități, testarea de integrare, adică testarea funcționării corecte atunci când mai multe părți ale sistemului sunt implicate în realizarea unei funcționalități și în final testarea de sistem, care evident se referă la testarea întregului sistem, acesta putând să fie compus din mai multe componente \textit{software} și \textit{hardware}.
+
+\textbf{Testarea aspectelor nefuncționale} se concentrează asupra unei game largi de probleme cum ar fi securitatea, conectivitatea, rezistența la stres și multe altele ce pot influența în mod indirect funcționarea unui sistem.
+
+% Securitate, punct special
+
+Un interes aparte în prezenta lucrare va fi acordat testării securității, deoarece este unul din subiectele de cel mai mare interes în rândul utlizatorilor și al producătorilor, așa cum constată \cite{Ahmed2019} și \cite{Lee2015}. Compromiterea securității \acrshort{iot} poate duce la nefuncționarea corectă, expunerea de date confidențiale sau chiar punerea în pericol de vieți omenești în cazul infrastructurilor critice.
+
+% Relevanta in contextul IoT al notiunilor de mai sus
+
+În contextul \acrshort{iot}, testarea prezintă particularități aparte, deoarece spre deosebire de testarea în arii clasice ale dezvoltarii \textit{software}, unde nivelul \textit{hardware} poate fi considerat sigur și suficient testat, aici avem de a face cu o legătură strânsă între \textit{software} și \textit{hardware}, ambele fiind insuficient testate și cu capabilități reduse.
+
+% Dificultati in sistemele heterogene eda
+% http://www.edwardcurry.org/publications/Hasan_DEBS_2012.pdf
+
+\section{Analiza literaturii existente}
+
+Pentru realizarea lucrării am parcurs articolele științifice din cardul conferințelor și jurnalelor recunoscute, dar și publicații private și independente din industrie. În continuare vom contura o imagine de ansamblu a metodologiilor, tehnicilor, practicilor și uneltelor utilizate pentru testarea sistemelor \acrshort{iot}. răspunzând la o serie de întrebări pe baza articolelor analizate: 
+
+\begin{itemize}
+    \item[] \textbf{Q1}. Care sunt aspectele sistemelor IoT pentru care există cel mai mare interes din punct de vedere al testării, atât pentru utilizatori cât și pentru producători?
+    \item[] \textbf{Q2}. Care sunt metodologiile și uneltele de testare curente și cum acoperă acestea nevoile constatate anterior?
+    \item[] \textbf{Q3}. Care sunt principalele obstacole întâmpinate de cercetători și dezvoltatori?
+    \item[] \textbf{Q4}. Cum putem compara obiectiv diferite metodologii și eficiența acestora în a doborî obstacolele descoperite?
+\end{itemize}
+
+Motivația pentru \textbf{Q1} este nevoia de a afla care sunt ariile în care utilizatorii și producătorii își doresc o îmbunătățire a situației curente, astfel creăm posibilitatea de valoare adăugată pentru industrie cât și pentru mediul academic. \textbf{Q2} urmărește să stabilească starea curentă a tehnologiilor și metodologiilor, iar \textbf{Q3} să găsească principalele lipsuri ale stării curente, astfel ne putem îndrepta cercetarea spre nevoile concrete ale utilizatorilor, producătorilor și cercetătorilor. \textbf{Q4} este o inițiativă pentru urmărirea obiectivă și cantitativă a rezultatelor pentru a încuraja inovația.
+
+\subsection*{Q1. Care sunt aspectele sistemelor IoT pentru care există cel mai mare interes din punct de vedere al testării, atât pentru utilizatori cât și pentru producători?}
+
+O analiză sistematică a 478 de articole publicate în perioada 2009 - 2017 realizată de \cite{Ahmed2019}, propune o taxonomie cuprinzătoare pentru cercetarea din domeniul \acrshort{iot}, clasele cele mai generale fiind: asigurarea calității (\textit{en. \acrlong{qa}}), performanța dispozitivelor, confidențialitate și încredere, securitate și testare. Efortul de cercetare este îndreptat cu precădere spre calitatea și securitatea sistemelor \acrshort{iot}, aspect tratat în 68 de lucrări. Arii similare cu un număr semnificativ de lucrări sunt \textit{design}-ul protocoalelor și arhitecturilor sigure cu 165 de lucrări și testarea securității cu 51 de lucrări. Privind aceste cifre, putem observa o atenție sporită oferită securității, aceasta fiind prezentă în multiple categorii. Consider justificat acest interes deoarece impactul digitalizării mediului înconjurător aduce toate riscurile asociate sistemelor informatice în viața cotidiană, dar și în infrastructuri critice. \cite{Lee2015} susțin această opinie, considerând că numărul în creștere al dispozitivelor interconectate poate crea reacții în lanț dezastroase în cazul unei breșe de securitate. Aceștia accentuează nevoia ca \textit{business}-urile să ofere interes sporit și să depună efort pentru asigurarea securității și confidențialității sistemelor produse.
+
+Observăm ca securitatea este tema comună a multor lucrări, așa că o vom considera alături de funcționarea corectă a sistemelor, problema principală în IoT.
+
+% TODO: mai trebuie sa scriu aici
+
+\subsection*{Q2. Care sunt metodologiile de testare curente și cum acoperă acestea nevoile constatate anterior?}
+
+Deși metodologiile de testare ale sistemelor \acrshort{iot} sunt variate și în număr mare, acestea nu au suport empiric foarte solid. Pentru metodele formale de analiză și testare cum ar fi \textit{model-based testing} (testarea bazată pe modelare formală) sau \textit{runtime verification} (verificarea în timpul execuției), \cite{Ahmed2019} constată că există un număr restrâns de experimente care să ateste eficiența și un număr și mai restrâns de inițiative de adoptare în industrie. Consider că una din posibilele cauze este dificultatea de a un set de proprietăți formale suficient de cuprinzătoare pentru a aduce valoare suficientă, dar și efortul mare necesar pentru a implementa aceste metode de analiză. Alte metode formale de testare utilizează metode de analiză statistică a comportamentului dispozitivelor și sistemelor. 
+
+Protocoalele de comunicație reprezintă un subiect de interes pentru testare. Avem de a face atât cu verificare formală, testare aleatoare sau testarea conformității cu specificațiile. Spre deosebire de dezvoltarea software generală unde protocoalele sunt considerate a fi testate exhaustiv deja, în dezvoltarea sistemelor \acrshort{iot} acestea încă reprezintă un teritoriu explorat insuficient. 
+
+Interesați de testarea interoperabilității și integrării sistemelor, \cite{Bures2020} observă o serie de publicații care se concentrează pe testarea combinatorială, \textit{path-based testing}, dar și tehnici de testare individuală clasice care combinate pot reprezenta o soluție pentru testarea de integrare. 
+
+\cite{Corts2019} constată că testarea de performanță, testarea funcțională și de utilizabilitate reprezintă cele mai întâlnite abordări din literatura evaluată, cu apariții în 27\%, respectiv 12\% și 14\% din articolele analizate. De asemenea, aceștia observă o ambiguitate în ceea ce privește utilizarea termenilor de "testare funcțională" și "testare de sistem" față de testarea software generală unde sunt utilizați cu mult mai multă precizie. Autorii atribuie această ambiguitate naturii heterogene și distribuite a sistemelor, propunând că noi tehnici trebuiesc explorate. 
+
+În sfera practică a testării, \cite{Dias2018} realizează o listă a uneltelor software și platformelor utilizate în industrie. Întâlnim unelte orientate pe testarea individuală a dispozitivelor, respectiv a codului care se execută pe sistemele \textit{embeded}, dar și pentru testarea rețelelor. De asemenea, întâlnim soluții de testare pentru toate nivelele de la testare unitară la testare de acceptanță, însă niciuna nu oferă o acoperire integrală și nici universală, acestea fiind adesea legate de o platformă sau tehnologie anume. % TODO: de continuat cu cateva exemple concrete
+
+\subsection*{Q3. Care sunt principalele obstacole întâmpinate de cercetători și dezvoltatori?}
+
+Un aspect semnalat de toate lucrările analizate este caracterul heterogen al sistemelor \acrshort{iot}, acestea fiind compuse din dispozitive și software produse de multiplii terți, o gamă largă de protocoale de comunicație și configurații posibile. \cite{Lee2015} expune provocările principale ale domeniului din perspectiva dezvoltatorilor, securitatea, confidențialitatea și haosul fiind principalele provocări. Prin haos, autorii se referă la plenitudinea de standarde, protocoale, comunicații complexe și dispozitive puțin testate ce sunt utilizate în practică în momentul de față. Acest caracter \textit{haotic} prezintă un risc crescut de a genera evenimente negative în infrastructuri critice cum ar fi cele medicale sau industriale. O altă perspectivă practică este prezentată de \cite{Dias2018}, care concluzionează că există o lipsă de unelte software destinate pentru testarea sistemelor heterogene și distribuite în mod automat, majoritatea soluțiilor fiind ancorate într-un set rigid de tehnologii sau manufacturieri. În plus, lipsesc soluții de testare pentru caractere nefuncționale ale sistemelor cum ar fi securitatea, confidențialitatea sau \textit{management}-ul actualizărilor software.
+
+Atât \cite{Corts2019}, cât și \cite{Ahmed2019} semnalează necesitatea, dar și dificultatea creării de noi tehnici și metodologii pentru testarea sistemelor heterogene și distribuite, deoarece cele pentru sistemele tradiționale nu sunt eficiente sau aplicabile pentru industria \acrshort{iot}. Încă o provocare este reprezentată de compromisul dintre securitate și optimizarea costurilor de producție a dispozitivelor \textit{Hardware}-ul mai ieftin nu dispune de capabilități de securitate foarte avansate, producătorii fiind astfel puși în dificultate. Spre deosebire de sistemele clasice unde considerăm protocoalele și \textit{hardware}-ul suficient testate, în dezvoltarea produselor \acrshort{iot} aceste nivele nu sunt încă suficient acoperite.
+
+\subsection*{Q4. Cum putem compara obiectiv diferite metodologii și eficiența acestora în a doborî obstacolele descoperite?}
+
+Deși articolele analizate conțin viziune cuprinzătoare asupra tehnicilor, metodologiilor și soluțiilor de testare, niciunul din acestea nu menționează metode de evaluare și comparare obiectivă. Luând în considerare lipsa de date empirice pentru validarea diferitelor metode de testare, lipsă constată de articolele în cauză, putem deduce că există o necesitate pentru stabilirea unui cadru de comparare și evaluare obiectivă pus la dispoziție cercetătorilor. Fără acest cadru, progresul spre doborârea provocărilor impuse de natura domeniului nu poate fi cuantificat cu ușurință. Acest lucru lasă loc interpretărilor și aprecierilor calitative subiective care au o contribuție minimală la cunoașterea științifică.
+
+Observăm că și în alte arii există necesitatea metodelor obiective de evaluare și comparare, de exemplu în testarea aplicațiilor \textit{web} \cite{Garousi2013} constată că fiecare articol publicat utilizează un alt set de aplicații pentru evaluarea tehnicii de testare propuse, astfel compararea obiectivă a articolelor devine dificilă. Alt exemplu este reprezentat de \cite{Brockman2016} în sfera \textit{reinforcement learning}, autorii propunând un mediu unitar cu multiple probleme de reper (\textit{en. benchmark}) pentru evaluarea și compararea algoritmilor propuși de cercetători.
+
+\section{Obiective}
+
+În urma analizei făcute asupra literaturii existente, am identificat o serie de caracteristici definitorii pentru sistemele \acrlong{iot}, acestea sunt hetereogene, distribuite, prezintă interacțiuni complexe, produc și procesează cantități mari de date și sunt integrate în medii fizice. Toate acestea aduc o serie unică de provocări pentru dezvoltarea și testarea atât a \textit{software-}-ului, cât și a \textit{hardware}-ului. Aceste provocări sunt dificile și puțin explorate în comparație cu ariile clasice de dezvoltare \textit{software} precum dezvoltarea aplicațiilor web. Prezenta lucrare își propune să:
+
+TODO: nu-mi place formularea asa mult, tre sa evidentiez mai bine relevanta unui dataset de benchmarking si playground
+
+\begin{itemize}
+    \item stabilească un cadru teoretic pentru sistemele \acrlong{iot}
+    \item propună posibile metode de comparare a tehnicilor și uneltelor pentru testare
+    \item ilustreze practic metodele propuse prin analizarea câtorva metode de testare
+    \item propună direcții de continuare a cercetării
+\end{itemize}
