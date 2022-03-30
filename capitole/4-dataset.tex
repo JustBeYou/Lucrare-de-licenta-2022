@@ -1,10 +1,18 @@
 \chapter{Construirea unui set de aplicații pentru evaluarea 
 tehnicilor de testare}
 
-TODO: pe baza paper-ului de functional testing
+După cum am argumentat în capitolele precedente, sistemele \acrshort{iot} sunt complexe, heterogene și distribuite, caracteristici care aduc o serie de dificultăți greu de depășit în testare. Am oferit o argumentare detaliată asupra acestor aspecte în secțiunea \textbf{2.2.Q3}. Pentru a avansa în ce privește starea curentă a tehnicilor de testare avem nevoie de metrici cât mai obiective, care ar ușura munca cercetătorilor de a reproduce rezultate și de a le compara. În urma analizei literaturii din secțiunea \textbf{2.2.Q4}, am constatat imposibilitatea stabilirii unor astfel de metrici, deoarece majoritatea publicațiilor utilizează un set propriu de aplicații pentru desfășurarea experimentelor. Astfel, a compara numărul de defecte descoperite, timpul sau alți parametri este irelevant, deoarece mediul variază. 
 
-\section{Motivație}
+Regăsim aceeași concluzie enunțată de \cite{Paduraru2021}, în articolul lor care propune o specificație formală pentru descrierea sistemelor \acrshort{iot}. Pentru evaluarea riguroasă a specificației propuse este nevoie de construirea unui set de aplicații cât mai apropiate de realitate. Această inițiativă este materializată și prezentată de lucrarea lui \cite{Cristea2022}. Aceasta va fi prezentată în paginile ce urmează evidențiind contribuțiile proprii, fără a omite perspectiva generală. 
 
-\section{Aplicațiile și infrastructura}
+Un aspect important al setului de aplicații construit este faptul că este \textit{open-source}. Într-o industrie în care majoritatea producătorilor nu pun la dispoziție decât sursele deja compilate ale \textit{firmware}-ului, iar în multe cazuri acestea se află pe dispozitive ce nu permit accesarea lui, existența \textit{software}-ului \textit{open-source} este crucială pentru a crea un mediu transparent de experimentare. 
+
+O observație importantă este că setul de aplicații este realizat în mare măsură imitând aplicațiile reale dintr-o locuință inteligentă, deoarece este unul din cele mai întâlnite scenarii de utilizare a tehnologiilor \acrshort{iot} și pentru că oferă un grad de complexitate și interconectare suficient de mic încât să fie realizat fără eforturi majore, dar și suficient de mare încât să mimeze comportamentul unui sistem real, aducând același tip de provocări.
+
+În prezentul capitol, vom discuta despre modul de construire al setului de aplicații, infrastructura și părțile sale componente. Vom descrie cum poate fi utilizat de cercetători sau alți profesioniști pentru analizarea și evaluarea tehnicilor de testare, iar în final ne vom concentra asupra limitărilor și posibilelor extinderi ale setului.
+
+\section{Descrierea aplicațiilor}
+
+Pentru a imita cât mai bine o situație reală, aplicațiile utilizate au surse multiple, o parte fiind dezvoltate de echipe independente de studenți, o altă parte au fost scrise de echipa de cercetare \acrshort{sasha}, iar altele au fost obținute din surse publice. Au fost aduse modificări pentru a facilita integrarea, dar și pentru a introduce defecte (\textit{en. bugs}) artificiale pe lângă cele deja existente. Această diversitate se regăsește și în sectorul comercial, acolo unde dispozitive și software de la producători multipli sunt utilizate în medii complexe și condiții impredictibile. Considerăm că această abordare de construire a aplicațiilor este suficient de robustă și suficient de apropiată de realitate.
 
 \section{Evaluare și limitări}
