@@ -1,18 +1,204 @@
-\chapter{Construirea unui set de aplicații pentru evaluarea 
+\chapter{Construirea unei suite de aplicații pentru evaluarea 
 tehnicilor de testare}
 
-După cum am argumentat în capitolele precedente, sistemele \acrshort{iot} sunt complexe, heterogene și distribuite, caracteristici care aduc o serie de dificultăți greu de depășit în testare. Am oferit o argumentare detaliată asupra acestor aspecte în secțiunea \textbf{2.2.Q3}. Pentru a avansa în ce privește starea curentă a tehnicilor de testare avem nevoie de metrici cât mai obiective, care ar ușura munca cercetătorilor de a reproduce rezultate și de a le compara. În urma analizei literaturii din secțiunea \textbf{2.2.Q4}, am constatat imposibilitatea stabilirii unor astfel de metrici, deoarece majoritatea publicațiilor utilizează un set propriu de aplicații pentru desfășurarea experimentelor. Astfel, a compara numărul de defecte descoperite, timpul sau alți parametri este irelevant, deoarece mediul variază. 
+După cum am argumentat în capitolele precedente, sistemele \acrshort{iot} sunt complexe, heterogene și distribuite, caracteristici care aduc o serie de dificultăți greu de depășit în testare. Am oferit o argumentare detaliată asupra acestor aspecte în secțiunea \textbf{2.2.Q3}. Pentru a avansa în ce privește starea curentă a tehnicilor de testare avem nevoie de metrici cât mai obiective, care ar ușura munca cercetătorilor de a reproduce rezultate și de a le compara. În urma analizei literaturii din secțiunea \textbf{2.2.Q4}, am constatat imposibilitatea stabilirii unor astfel de metrici, deoarece majoritatea publicațiilor utilizează o suită proprie de aplicații pentru desfășurarea experimentelor. Astfel, a compara numărul de defecte descoperite, timpul sau alți parametri este irelevant, deoarece mediul variază. 
 
-Regăsim aceeași concluzie enunțată de \cite{Paduraru2021}, în articolul lor care propune o specificație formală pentru descrierea sistemelor \acrshort{iot}. Pentru evaluarea riguroasă a specificației propuse este nevoie de construirea unui set de aplicații cât mai apropiate de realitate. Această inițiativă este materializată și prezentată de lucrarea lui \cite{Cristea2022}. Aceasta va fi prezentată în paginile ce urmează evidențiind contribuțiile proprii, fără a omite perspectiva generală. 
+Regăsim aceeași concluzie enunțată de \cite{Paduraru2021}, în articolul lor care propune o specificație formală pentru descrierea sistemelor \acrshort{iot}. Pentru evaluarea riguroasă a specificației propuse este nevoie de construirea unei suite de aplicații cât mai apropiate de realitate. Această inițiativă este materializată și prezentată de lucrarea lui \cite{Cristea2022}. Aceasta va fi prezentată în paginile ce urmează evidențiind contribuțiile proprii, fără a omite perspectiva generală. 
 
-Un aspect important al setului de aplicații construit este faptul că este \textit{open-source}. Într-o industrie în care majoritatea producătorilor nu pun la dispoziție decât sursele deja compilate ale \textit{firmware}-ului, iar în multe cazuri acestea se află pe dispozitive ce nu permit accesarea lui, existența \textit{software}-ului \textit{open-source} este crucială pentru a crea un mediu transparent de experimentare. 
+Un aspect important al suitei de aplicații construit este faptul că este \textit{open-source}. Într-o industrie în care majoritatea producătorilor nu pun la dispoziție decât sursele deja compilate ale \textit{firmware}-ului, iar în multe cazuri acestea se află pe dispozitive ce nu permit accesarea lui, existența \textit{software}-ului \textit{open-source} este crucială pentru a crea un mediu transparent de experimentare. 
 
-O observație importantă este că setul de aplicații este realizat în mare măsură imitând aplicațiile reale dintr-o locuință inteligentă, deoarece este unul din cele mai întâlnite scenarii de utilizare a tehnologiilor \acrshort{iot} și pentru că oferă un grad de complexitate și interconectare suficient de mic încât să fie realizat fără eforturi majore, dar și suficient de mare încât să mimeze comportamentul unui sistem real, aducând același tip de provocări.
+O observație importantă este că suita de aplicații este realizat în mare măsură imitând aplicațiile reale dintr-o locuință inteligentă, deoarece este unul din cele mai întâlnite scenarii de utilizare a tehnologiilor \acrshort{iot} și pentru că oferă un grad de complexitate și interconectare suficient de mic încât să fie realizat fără eforturi majore, dar și suficient de mare încât să mimeze comportamentul unui sistem real, aducând același tip de provocări.
 
-În prezentul capitol, vom discuta despre modul de construire al setului de aplicații, infrastructura și părțile sale componente. Vom descrie cum poate fi utilizat de cercetători sau alți profesioniști pentru analizarea și evaluarea tehnicilor de testare, iar în final ne vom concentra asupra limitărilor și posibilelor extinderi ale setului.
+În prezentul capitol, vom discuta despre modul de construire al suitei de aplicații și particularitățile fiecărei aplicații în parte, prezentând funcționalitatea și tehnologiile utilizate pentru realizarea ei. Ne vom concentra apoi asupra infrastructurii de interconectare a aplicațiilor și vom discuta despre protocoalele utilizate și motivația alegerii lor. Pentru a ilustra o situație cât mai apropiată de realitate aplicațiile sunt angrenate în fluxuri de automatizări orchestrate de o unitate centrală, analiza acestor fluxuri fiind de asemenea prezentă în acest capitol. După înțelegerea structurală a setului de aplicații vom vedeam cum îl putem folosi pentru compararea și analizarea tehnicilor de testare și cum poate fi acesta util pentru cercetători sau profesioniști. În final ne vom concentra asupra limitărilor și posibilelor îmbunătățiri ce ar putea fi aduse în viitor setului de aplicații.
 
 \section{Descrierea aplicațiilor}
 
-Pentru a imita cât mai bine o situație reală, aplicațiile utilizate au surse multiple, o parte fiind dezvoltate de echipe independente de studenți, o altă parte au fost scrise de echipa de cercetare \acrshort{sasha}, iar altele au fost obținute din surse publice. Au fost aduse modificări pentru a facilita integrarea, dar și pentru a introduce defecte (\textit{en. bugs}) artificiale pe lângă cele deja existente. Această diversitate se regăsește și în sectorul comercial, acolo unde dispozitive și software de la producători multipli sunt utilizate în medii complexe și condiții impredictibile. Considerăm că această abordare de construire a aplicațiilor este suficient de robustă și suficient de apropiată de realitate.
+Pentru a ilustra cât mai bine o situație reală, aplicațiile utilizate au surse multiple, o parte fiind dezvoltate de echipe independente de studenți, o altă parte au fost scrise de echipa de cercetare \acrshort{sasha}, iar altele au fost obținute din surse publice. Au fost aduse modificări pentru a facilita integrarea, dar și pentru a introduce defecte (\textit{en. bugs}) artificiale pe lângă cele deja existente. Această diversitate se regăsește și în sectorul comercial, acolo unde dispozitive și software de la producători multipli sunt utilizate în medii complexe și condiții impredictibile. Considerăm că această abordare de construire a aplicațiilor este suficient de robustă și suficient de apropiată de realitate.
 
-\section{Evaluare și limitări}
+În paragrafele următoare vom analiza caracteristicile fiecărei aplicații \footnote{Codul sursă al aplicațiilor, infrastructura și documentația acestora pot fi găsite la \url{https://github.com/unibuc-cs/IoT-application-set}}, caracteristici precum modul de funcționare, tehnologiile utilizate pentru dezvoltare, dependența și interacțiunea față de alte aplicații sau relevanța pentru evaluarea tehnicilor de testare. Toate aplicațiile simulează procese des întâlnite în locuințele inteligente.
+
+% ===================================================================== DONE
+\subsection*{FlowerPower}
+
+\textbf{Descriere}:  Un \textit{ghiveci inteligent} care expune prin intermediului unui \acrshort{api} supravegherea și îngrijirea plantelor. De asemenea poate notifica utilizatorul în legătură cu anumite schimbări legate de starea plantelor.
+
+\textbf{Tehnologii utilizate}: \textit{C++} și \textit{GNU Makefiles} pentru dezvoltare, împreună cu bibliotecile \textit{Pistache} pentru servirea de cereri \acrfull{http}, \textit{RapidJson} pentru lucrul cu date în format \acrfull{json} și \textit{Mosquitto} pentru comunicarea cu un distribuitor de mesaje prin protocolul \acrfull{mqtt}. 
+
+\textbf{În context}: Interacționează cu aplicația WindWow în legătură cu aspecte precum temperatura sau luminozitatea.
+
+\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2020.
+% =====================================================================
+
+% =====================================================================
+\subsection*{WindWow}
+
+\textbf{Descriere}:  O fereastră inteligentă ce permite monitorizarea temperaturii și luminozității din cameră, luminozitatea fiind reglabilă prin intermediul draperiilor acționate de utilizator de la distanță.
+
+\textbf{Tehnologii utilizate}: \textit{C++} și \textit{CMake} pentru dezvoltare, împreună cu bibliotecile \textit{Pistache}, \textit{NLohmann-JSON} pentru lucrul cu date în format \acrshort{json} și \textit{Mosquitto}.
+
+\textbf{În context}: Senzorii de luminozitate și temperatură colectează date relevante pentru o multitudine de alte dispozitive din rețea cum ar fi SmartFlower și SmartTV, care își pot calibra funcționarea în funcție de datele primite.
+
+\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2020.
+% =====================================================================
+
+% =====================================================================
+\subsection*{Smarteeth}
+
+\textbf{Descriere}: 
+
+\textbf{Tehnologii utilizate}: 
+
+\textbf{În context}: 
+
+\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2020.
+% =====================================================================
+
+% =====================================================================
+\subsection*{SmartKettle}
+
+\textbf{Descriere}:  
+
+\textbf{Tehnologii utilizate}: 
+
+\textbf{În context}: 
+
+\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2020.
+% =====================================================================
+
+% =====================================================================
+\subsection*{SmartTV}
+
+\textbf{Descriere}: 
+
+\textbf{Tehnologii utilizate}: 
+
+\textbf{În context}: 
+
+\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2020.
+% =====================================================================
+
+% =====================================================================
+\subsection*{SmartOven}
+
+\textbf{Descriere}: 
+
+\textbf{Tehnologii utilizate}: 
+
+\textbf{În context}: 
+
+\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2021.
+% =====================================================================
+
+% =====================================================================
+\subsection*{SeraSmart}
+
+\textbf{Descriere}: 
+
+\textbf{Tehnologii utilizate}: 
+
+\textbf{În context}: 
+
+\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2021.
+% =====================================================================
+
+% =====================================================================
+\subsection*{SoundSystem}
+
+\textbf{Descriere}: 
+
+\textbf{Tehnologii utilizate}: 
+
+\textbf{În context}: 
+
+\textbf{Sursă}: Autorul prezentei lucrări
+% =====================================================================
+
+% TODO: de adaugat diagrame pentru astea doua de jos
+
+% =====================================================================
+\subsection*{PhilipsHue Simulator}
+
+\textbf{Descriere}: 
+
+\textbf{Tehnologii utilizate}: 
+
+\textbf{În context}: 
+
+\textbf{Sursă}: Autorul prezentei lucrări
+% =====================================================================
+
+% =====================================================================
+\subsection*{Smart Vacuum Cleaner}
+
+\textbf{Descriere}: 
+
+\textbf{Tehnologii utilizate}:
+
+\textbf{În context}: 
+
+\textbf{Sursă}: Autorul prezentei lucrări
+% =====================================================================
+
+Observăm ca aplicațiile prezentate sunt variate atât din punct de vedere al tehnologiilor utilizate (\textit{C++}, \textit{Python}, \textit{Go}, \textit{Rust}), cât și din punct de vedere al funcționării lor, acestea acoperind o gamă largă de utilizări posibile în cadrul unei locuințe inteligente. 
+
+% TODO: sa vorbesc un pic mai mult de tehnolgii si relevanta lor pentru iot
+% TODO: sa vorbesc despre fluxurile de automatizari si sa descriu cateva
+
+În secțiunea următoare vom prezenta modul în care aceste aplicații au fost integrate într-o suită coerentă cu fluxuri de intercomunicare complexe.
+
+\section{Infrastructura}
+
+Așa cum am menționat anterior, dispozitivele dintr-un sistem \acrshort{iot} sunt interconectate și fac parte din fluxuri de complexități variate. Pentru a ne păstra cât mai aproape de un sistem real, aplicațiile mai sus menționate au fost puse într-o rețea comună și orchestrate folosind o aplicație centrală, în general cunoscută sub numele de \textit{hub}. Rețeaua poate fi desfășurată (en. \textit{deployed} - \textit{deployment}) atât într-un mediu virtualizat folosind tehnologiile \textit{Docker} și \textit{docker-compose}, dar și într-un mediu cu hardware fizic folosind o serie de \textit{script}-uri de automatizare, dar și câteva operații manuale. În experimentele desfășurate am folosit atât mediul virtualizat, cât și un \textit{deployment} pe arhitectura \textit{x86} \footnote{TODO: } și pe \textit{ARMv7l} \footnote{TODO: ...} folosind un \textit{Raspberry Pi 2 Model B} \footnote{TODO: ...}. 
+
+Punctul central al rețelei este reprezentat de aplicația \textit{hub}. Aceasta este responsabilă cu monitorizarea și orchestrarea tuturor dispozitivelor din rețea și permite implementarea fluxurilor de automatizare. \textit{Hub}-ul este o aplicație proprie dezvoltată folosind limbajul \textit{Python} și permite integrarea a două protocoale de comunicație în momentul de față: \acrshort{http} și \acrshort{mqtt}. Am ales să nu folosim o aplicație \textit{hub} comercială cum ar fi \textit{OpenHAB} sau \textit{Home Assistant}, deoarece avantajele aduse de o soluție personalizată din punct de vedere al timpului de integrare și al simplității au fost superioare.
+
+Pentru a asigura omogenitatea comunicării într-un sistem cu componente heterogene, toate aplicațiile au specificații \textit{OpenAPI} \footnote{TODO: descrie openapi} pentru descrierea rutelor \acrshort{http} expuse și specificații \textit{AsyncAPI} \footnote{TODO: ...} pentru descrierea formatului mesajelor transmise prin intermediul protocolului \acrshort{mqtt}. Folosind \textit{OpenAPI Generator} \footnote{TODO: ...}, specificațiile \textit{OpenAPI} pot fi transformate în cod de interacțiune cu aplicațiile. Codul generat a fost utilizat în aplicația de hub pentru a oferi acces uniform la aplicații.
+
+% TODO: de adaugat un listing cu openapi si asyncapi ca sa vedem cum arata
+
+Față de protocolul \acrshort{http}, protocolul \acrshort{mqtt} operează în manieră \textit{publisher}/\textit{subscribe}, nu \textit{request}/\textit{reqsponse}, astfel devine necesară existența unui distribuitor de mesaje în rețea. Pentru această sarcină am utilizat \textit{Eclipse Mosquitto}, deoarece este un produs \textit{open-source} ușor de instalat și folosit atât în mediu virtualizat cât și nevirtualizat.
+
+Întreaga configurație este stocată în câteva fișiere în format \acrfull{yaml} sau \acrshort{json}, aceasta specificând numele și calea aplicațiilor, porturile de rețea expuse și alți parametrii specifici. De asemenea conține informații despre aplicația \textit{hub} și serviciile externe necesare (cum ar fi distribuitorul de mesaje). Configurația este citită de utilitarele construite pentru a facilita cele mai comune operații: compilarea aplicațiilor, rularea aplicațiilor pe mediul local virtualizat sau nu, executarea unor teste, repornirea sau oprirea aplicațiilor, instalarea dependințelor software, etc.
+
+% TODO: diagrama retea, aplicatii, hub, etc
+
+% TODO: diagrama docker
+
+\textit{Docker} este o soluție software pentru izolarea aplicațiilor în containere. Față de mașinile virtuale clasice care fie utilizează facilitățile de virtualizare ale unității centrale de procesare, fie emulează în întregime o unitate centrală, \textit{Docker} pune la dispoziție un strat de abstractizare între aplicații și sistemul de operare astfel încât acestea se execută într-un mediu izolat denumit container, fără acces la restul sistemului. De asemenea, configurarea dependințelor și mediului din container în care va fi executată aplicația sunt specificate în mod textual, în asa numetele \textit{Dockerfiles}. Această abordare aduce o serie de avantaje printre care se numără o mai bună securitate pentru un cost mic de performanță și o bună reproductibilitate a mediilor. Pentru a orchestra mai multe containere folosim \textit{docker-compose} care poate fi configurat de asemenea în mod textual. Acesta permite și configurarea de topologii, medii de stocare și interacțiunea cu sistemul gazdă.
+
+Utilizarea suitei de aplicații folosind \textit{Docker} este convenientă, deoarece consumă puține resurse și nu necesită pregătiri suplimentare, însă pentru a simula un scenariu mai apropiat de realitate, aplicațiile pot fi de asemenea puse pe dispozitive hardware fizice cum ar fi \textit{Raspberry Pi}. Am pus la dispoziție scripturile necesare pentru compilarea aplicațiilor și instalarea dependințelor pentru un sistem \textit{Raspbian ARMv7l}. Aplicațiile împreună cu \textit{hub}-ul și distribuitorul de mesaje au fost desfășurate pe mai multe \textit{Raspberry Pi's} conectate prin \textit{wi-fi}.
+
+% TODO: diagrama raspberry pi
+
+\section{Extinderea suitei de aplicații}
+
+Deoarece există un număr foarte mare de posibile tipuri de sisteme \acrshort{iot} și utilizări ale acestora, suita de aplicații nu acoperă decât un mic număr din total. Astfel, încurajăm extinderea și îmbogățirea suitei cu aplicații și fluxuri de automatizare proprii atât din partea cercetătorilor cât și a profesioniștilor. Pașii pentru includerea unei noi aplicații sunt simplii și puțini la număr, astfel asigurând un proces cât mai puțin anevoios. În rândurile ce urmează vom parcurge ce caracteristici trebuie sa aibă o nouă aplicație și ce pași trebuie urmați pentru includerea ei.
+
+\textbf{Caracteristici necesare}:
+\begin{enumerate}
+    \item Aplicația trebuie sa comunice folosind cel puțin unul din protocoalele \acrshort{http} sau \acrshort{mqtt}.
+    \item Sunt necesare specificații \textit{OpenAPI} și/sau \textit{AsyncAPI} în funcție de protocoalele folosite.
+    \item Codul trebuie sa poată fi compilat pentru arhitectura \textit{x86} sau să poată fi cel puțin executat într-un emulator
+\end{enumerate}
+
+\textbf{Integrarea în suită} \footnote{Tutorialul complet poate fi găsit la adresa \url{https://github.com/unibuc-cs/IoT-application-set/blob/master/HOW_TO_ADD_AN_APP.md}}:
+\begin{enumerate}
+    \item Crearea configurațiilor necesare pentru generarea de clienți de comunicare (momentan doar pentru \acrshort{http}).
+    \item Punerea la dispoziție a unui \textit{script} de instalare al dependințelor aplicației.
+    \item Punerea la dispoziție a unui \textit{script} de compilare a aplicației pentru arhitecturile țintă.
+    \item Punerea la dispoziție a unui \textit{script} pentru executarea aplicației pe un port de rețea arbitrar.
+    \item Crearea unei configurații în format \textit{Dockerfile} și adăugarea unei intrări în configurația generală a suitei.
+    \item Copierea codului sursă a noii aplicației în directorul corespunzător.
+\end{enumerate}
+
+Deși recomandăm integrarea aplicațiilor \textit{open-source}, în cazul în care sursa nu este disponibilă, se pot omite pașii de compilare și copiere ale sursei aplicației. Este necesar însă să ne asigurăm ca binarele puse la dispoziție pot fi executate pe arhitectura \textit{x86} fie direct, fie prin intermediul unui emulator.
+
+\section{Defecte, evaluare și limitări}
+
+Scopul suitei de aplicații este compararea metodelor de testare, așa cum am menționat anterior. Pentru a oferi un reper relevant, este necesar ca aplicațiile să conțină defecte realiste. Cum aceste aplicații au fost dezvoltate de multiple echipe de de studenți, conțin în mod natural o serie de defecte, defecte pe care le-am identificat în urma testării funcționale a suitei, dar despre acest proces vom discuta în capitolul următor. Pe lângă defectele existente, am considerat necesară îmbogățirea suitei cu o gamă mai largă de defecte. Acestea au fost introduse în codul aplicațiilor sau în regulile de automatizare din aplicația \textit{hub}, unele defecte fiind o combinație din ambele.
+
+% TODO: de vorbit despre nivelele de buguri
+% TODO: bugurile existente
+% TODO: bugurile injectate, patching-ul
+% TODO: cum evaluam, cum folosinm dataset-ul
+% TODO: limitari cum ar fi tehnologiile folosite, lipsa de firmware, prea putine protocoale

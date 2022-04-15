@@ -22,3 +22,5 @@ PatrIoT, alte lucrari similare
 5. Dataset, abordari proprii
 
 6. Evaluare
+
+TODO: sa adaug note de subsol si explicatii acolo unde e nevoie
