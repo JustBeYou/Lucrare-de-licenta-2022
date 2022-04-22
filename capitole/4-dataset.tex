@@ -197,7 +197,105 @@ Deși recomandăm integrarea aplicațiilor \textit{open-source}, în cazul în c
 
 Scopul suitei de aplicații este compararea metodelor de testare, așa cum am menționat anterior. Pentru a oferi un reper relevant, este necesar ca aplicațiile să conțină defecte realiste. Cum aceste aplicații au fost dezvoltate de multiple echipe de de studenți, conțin în mod natural o serie de defecte, defecte pe care le-am identificat în urma testării funcționale a suitei, dar despre acest proces vom discuta în capitolul următor. Pe lângă defectele existente, am considerat necesară îmbogățirea suitei cu o gamă mai largă de defecte. Acestea au fost introduse în codul aplicațiilor sau în regulile de automatizare din aplicația \textit{hub}, unele defecte fiind o combinație din ambele.
 
+Deoarece una din caracteristicile principale ale \acrshort{iot} este numărul mare de părți comunicante, am ales să împărțim defectele descoperite și injectate în trei categorii bazate pe nivelul de interacțiune dintre părțile sistemului. Aceste categorii sunt următoarele:
+
+\begin{enumerate}
+    \item Defecte la nivel de aplicație - acestea afectează doar aplicații individuale, efectele comune fiind funcționarea incorectă sau oprirea funcționării în totalitate
+    \item Defecte la nivel de flux de automatizare - caracterizate de rezultatul incorect la finalul executării unui singur flux de automatizare ce conține multiple aplicații
+    \item Defecte la nivel de persistență în sistem - atunci când execuția a mai multe fluxuri de automatizare care nu sunt disjuncte duce la funcționarea incorectă a întregului sistem
+\end{enumerate}
+
+În general, defectele din prima categorie au fost cel mai des abordate în literatură, majoritatea soluțiilor existente concentrându-se pe acestea. Pe de altă parte, defectele din celelalte categorii au un grad de dificultate în detectare mult mai ridicat, deoarece sunt cauzate în general din motive de concurență și sunt în strânsă legătură cu domeniul specific în care este utilizată aplicația. Să luam un exemplu pentru a ne face o imagine mai clară, un defect din categoria întâi poate fi reprezentat de un acces invalid de memorie care cauzează un răspuns întârziat, un răspuns cu date aleatorii sau chiar nefuncționarea completă a aplicației. Metricile de detectare sunt clare și independente de logica concretă a aplicației. Un defect din categoria a treia este mult mai subtil și mai complex, spre exemplu să considerăm ca un senzor de lumină inteligent comandă acționarea draperiilor în funcție de nivelul de luminozitate înregistrat. Utilizatorul comandă manual draperiile în timp ce acestea sunt în curs de acționare și cauzează blocarea mecanismului. În acest caz, detectarea defectului nu mai este la fel de evidentă, iar producerea acestuia necesită alinierea mai multor evenimente independente. 
+
+În studiul realizat de \cite{Zhou2021} se menționează o clasă de defecte cauzate de acțiuni impredictibile în cadrul fluxurilor de automatizări. Această clasă de defecte este ceea ce noi considerăm a fi defectele de nivel doi și trei în categorisirea proprie. Conform autorilor studiului, cauzele acestei clase de defecte sunt următoarele:
+
+% TODO: cum zic race condition in romana?
+\begin{enumerate}
+    \item \textit{race condition} între diferite fluxuri
+    \item evenimente lipsă sau procesate într-o ordine imprevizibilă
+    \item acțiuni duplicate sau în conflict
+\end{enumerate}
+
 % TODO: de vorbit despre nivelele de buguri
+
+În rândurile de mai jos vom analiza câteva exemple de defecte existente și introduse din toate cele trei categorii numite \footnote{O listă completă a defectelor și codului aferent acestora poate fi găsită la \url{https://github.com/unibuc-cs/IoT-application-set/tree/master/bug_unpatches}}. De asemenea, vom prezenta liniile de program responsabile pentru producerea defectului alături de modul în care acesta poate fi rezolvat. Secțiunile de cod vor fi reprezentate folosind formatul \textit{diff} \footnote{Format introdus de utilitarul POSIX \textit{diff} care permite vizualizarea diferențelor între fișiere text prin prefixarea liniilor cu simboluri care reprezintă adăugarea, ștergerea sau modificarea. Colorarea liniilor aduce un plus vizibilității}. În cadrul suitei de aplicații toate defectele sunt rezolvate, însă acestea pot fi activate selectiv folosind capabilitățile de \textit{patching} ale utilitarului \textit{git}.
+
+În aplicația WindWow am introdus un defect artificial care cauzează un acces al unei adrese invalide de memorie. Acesta este declanșat atunci când draperiile sunt trase și încercă să setăm o luminozitate mai mare de 25.
+
+\begin{lstlisting}[language=diff, caption={Accesarea adresei nule va cauza oprirea aplicației WindWow}]
+--- a/apps/windwow/Window.cpp
++++ b/apps/windwow/Window.cpp
+@@ -115,10 +115,9 @@ class Window {
+                     if(settings[i].name == "luminosity") {
+                         if(settings[i].value > 25.0) {
+                             if(changed_state[3] % 2 == 0) {
+-                                // BUG TO UNPATCH
+                                 // START FAKE BUG
+-                                // volatile int *p = nullptr;
+-                                // p[50] = 0xdeadbeef;
++                                volatile int *p = nullptr;
++                                p[50] = 0xdeadbeef;
+                                 // END FAKE BUG
+\end{lstlisting}
+
+Un defect deja existent în aplicația SmartPot este lipsa validărilor asupra datelor primite de la utilizatori. Aplicația folosește formatul \acrshort{json} pentru primirea cererilor. Datele din aceste cereri sunt reprezentate în memorie prin intermediul unui dicționar (tabel de dispersie, \textit{hash-map}). Aplicația nu validează existența cheilor accesate atunci când primește o cerere de actualizare a setărilor, astfel cauzând nefuncționarea aplicație.
+
+\begin{lstlisting}[language=diff, caption={Lipsa validării cheilor JSON în aplicația SmartPot}]
+--- a/apps/flowerpower/src/SmartPotEndpoint.cpp
++++ b/apps/flowerpower/src/SmartPotEndpoint.cpp
+@@ -269,8 +269,7 @@ namespace pot
+         double sensorMax = document["max"].GetDouble();
+ 
+         // Valoarea o updatam in MQTT.
+-        // BUG TO UNPATCH don't check for HasMember
+-        if ((!document.HasMember("nutrientType")) or
+-            document["nutrientType"].IsNull())
++        if (document["nutrientType"].IsNull())
+         {
+             Sensor aux = smartPot->GetSensor(sensorNameMap[sensorTypeID]);
+             aux.SetMinValue(sensorMin);
+\end{lstlisting}
+
+Unul din defectele introduse la nivel de flux de automatizare este sanitația insuficientă a datelor transmise spre SmartTV. Cum am văzut în secțiunea precedentă, există un flux de automatizare care reglează luminozitatea SmartTV-ului în funcție de datele colectate de la aplicația WindWow. SmartTV-ul acceptă valori de luminozitate în intervalul $(1, 10)$, însă aplicația \textit{hub} poate trimite valori în afara acestuia cauzând eșecul cererii de actualizare.
+
+\begin{lstlisting}[language=diff, caption={Valorile luminozității transmise spre SmartTV nu sunt doar în intervalul (1, 10)}]
+--- a/hub/app.py
++++ b/hub/app.py
+@@ -181,8 +181,6 @@ def rule4(env: Environment):
+             10 - env.data["windwow"]["luminosity"]/10 + brightness_base,
+             brightness_base 
+         )
+-    # // BUG TO UNPATCH forget to call min
+-    env.data["smarttv"]["brightness"] = min(
+-       env.data["smarttv"]["brightness"], 
+-       10)
+     env.clients["smarttv"].set_brightness_level_post(
+        int(env.data["smarttv"]["brightness"])
+    )
+\end{lstlisting}
+
+Intersectarea dintre două fluxuri de automatizare legate de WindWow și FlowerPower cauzează un defect din categoria a treia, anume defecte la nivel de persistență. Așa cum am văzut în cazul unei temperaturi prea ridicate luminozitatea va fi redusă prin acționarea draperiilor, însă acest eveniment poate declanșa aprinderea lampei FlowerPower în mod necesar, astfel încălzind excesiv planta. 
+
+\begin{lstlisting}[language=diff, caption={Lipsa verificării temperaturii cauzează un conflict între două fluxuri de automatizare}]
+--- a/hub/app.py
++++ b/hub/app.py
+@@ -165,8 +165,7 @@ def rule3(env: Environment):
+     luminosity_sensor_id = 3
+     threshold = env.settings["plant_lamp_window_treshold"]
+ 
+-    # // BUG TO UNPATCH don't check window temperature
+-    if env.data["windwow"]["luminosity"] < threshold and 
+-        env.data["windwow"]["temperature"] < 30:
++    if env.data["windwow"]["luminosity"] < threshold:
+         env.clients["flowerpower"].activate_solar_lamp_get()
+\end{lstlisting}
+
+Pentru a evalua o tehnica sau o unealtă de testare folosind suita de aplicații putem activa selectiv defectele sau tipurile de defecte asupra cărora suntem interesați. În urma aplicării metodologiei ce se dorește a fi evaluată, putem colecta o serie de metrici ce vor servi ca mijloc de comparare cu alte metodologii. Câteva posibile astfel de metrici sunt timpul și numărul de defecte descoperite, ratele de detecție per categoria de defecte sau acoperirea codului sau a stărilor posibile ale sistemului. Rămâne la latitudinea cercetătorilor să decidă care sunt cele mai potrivite metrici pentru evaluarea metodologiei în cauză și să interpreteze rezultatele. Oferirea unei metodologii de alegere a experimentelor și de evaluare este în afara scopului acestei lucrări.
+
+Deși defectele introduse sunt comparabile cu cele existente în realitate și pot oferi un punct de plecare pentru analiza tehnicilor de testare, trebuie să luăm în considerare și limitările acestei suite de aplicații. Un punct slab este reprezentat de lipsa software-ului găsit pe dispozitive reale, aplicațiile curente fiind doar simulări ale unor procese reale. De asemenea, acestea sunt proiectate să funcționeze în principal doar pe sisteme a căror arhitectură suportă un sistem de operare compatibil cu \acrfull{posix} sau similar, pe când în realitate multe dispozitive nu au un sistem de operare. În plus, suita conține un număr mic de protocoale de comunicație (doar \acrshort{http} și \acrshort{mqtt}). Toate aceste limitări se doresc a fi adresate în viitoarele activități de cercetare.
+
+Acum, după ce am construit o suită de aplicații care să fie similară unui sistem dintr-o locuință inteligentă cu fluxuri de automatizări și comunicare între dispozitive prin protocoale specifice, vom continua în capitolul următor prin aplicarea câtorva metodologii și unelte de testare. Vom folosi defectele deja prezentate pentru a compara aceste metodologii și pentru a putea analiza avantajele și dezavantajele acestora în raport cu metricile de evaluare alese.
+
 % TODO: bugurile existente
 % TODO: bugurile injectate, patching-ul
 % TODO: cum evaluam, cum folosinm dataset-ul
