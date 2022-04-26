@@ -95,12 +95,12 @@
 % Suport pentru rezumat în două limbi
 % Bazat pe https://tex.stackexchange.com/a/70818
 \newenvironment{abstractpage}
-  {\cleardoublepage\vspace*{\fill}\thispagestyle{empty}}
+  {\cleardoublepage\thispagestyle{empty}}
   {\vfill\cleardoublepage}
 \renewenvironment{abstract}[1]
-  {\bigskip\selectlanguage{#1}%
+  {\smallskip\selectlanguage{#1}%
    \begin{center}\bfseries\abstractname\end{center}}
-  {\par\bigskip}
+  {\par\smallskip}
 
 % Suport pentru anexe
 \usepackage[toc]{appendix}
@@ -132,7 +132,7 @@
 }
 
 % Metadate
-\title{Metode de testare a sistemelor Internet-of-Things}
+\title{O analiză comparativă a metodelor de testare pentru sistemele Internet-of-Things}
 \author{Mihail Feraru}
 
 % Generează variabilele cu @
