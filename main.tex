@@ -72,6 +72,24 @@
     morecomment=[f][\color{diffrem}]{-\ },
   }
 
+\lstdefinestyle{mystyle}{ % Listing design
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    %numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    keywordstyle=\bfseries,
+    showstringspaces=false,
+    escapeinside={(*}{*)},
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
 % Linkuri interactive în PDF
 \usepackage[
     colorlinks,

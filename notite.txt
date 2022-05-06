@@ -1,0 +1,20 @@
+Analiza statica cu weggli
+
+unchecked json
+weggli --cpp '{ 
+    Document $document;
+    NOT: $document[_].IsNull();
+    $document[_]._();
+}' ./apps/
+
+weggli --cpp '{ 
+    Document $document;
+    NOT: $document.HasMember(_);
+    $document[_]._();
+}' ./apps/
+
+null pointer access
+weggli --cpp '{
+    _* $var = nullptr;
+    $var[_];
+}' ./apps/

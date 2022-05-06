@@ -7,13 +7,97 @@ Pentru a dovedi relevanța suitei de aplicații construită anterior vom desfă�
 % TODO: de ales niste metrici de evaluare si motivat de ce
 % TODO: de rezumat tehnicile si structura capitolului
 
+% criterii evaluare:
+% automat vs manual
+% timp necesar pentru setup, complexitate setup
+% tipul de defecte care pot fi detectate
+% timp necesar pentru descoperirea defectelor
+% eficienta (cat la suta din defectele existente au fost detectate)
+% limitari si dezavantaje
+% futher work
+
 \section{Testarea funcțională}
 
 % TODO: de vorbit la general despre testarea functionala, dar scurt
+Am explicat în capitolul al doilea, secțiunea 2.1.2, ce este testarea funcțională și care sunt caracteristicile acesteia, așa că nu vom relua explicarea noțiunii. În secțiunea curentă vom vorbi despre o serie de tehnici de testare funcțională pe care le-am utilizat atât pentru a valida funcționarea corectă a suitei de aplicații, cât și pentru a oferi dovada reproductibilității defectelor existente.
 
-\subsection{Metodologia Behaviour-Driven Design}
+Vom compara o abordare proprie inspirată de principiile metodologiei \acrfull{bdd}, metodologie despre care vom vorbi pe larg mai jos, și un \textit{framework} experimental realizat de \cite{Bures2021} pentru testarea de integrare și interoperabilitate a sistemelor \acrshort{iot}.
+
+\subsection{Metodologia Behaviour-Driven Development}
 
 % TODO: de folosit continutul din paper
+
+\acrfull{bdd} este o metodologie de dezvoltare succesoare a \acrfull{tdd} care se preocupă de crearea de specificații clare și automatizabile pentru testarea sistemului țintă. Pentru a atinge acest scop, \acrshort{bdd} propune o terminologie standardizată pentru proiectarea cazurilor de test pentru a ușura formularea lor atunci când mai multe părți sunt implicate (\textit{stakeholders}), cum ar fi dezvoltatori, clienți sau personalul de vânzări. Vom prezenta pe scurt această metodologie bazându-ne pe studiul realizat de \cite{Solis2011} despre caracteristicile \acrshort{bdd}.
+
+Conform studiului, această metodologie pune accent pe folosirea unui limbaj comun, standardizat și independent de domeniul de aplicare pentru descrierea scenariilor de test. Scenariile sunt apoi formulate ca text în limbaj natural, cât mai simplu posibil și orientate spre descrierea de comportamente (en. \textit{behaviour}). De exemplu, formatul cel mai des întâlnit pentru formularea scenariilor de test poate fi observat mai jos.
+
+\begin{lstlisting}[caption={Structură comună a unui scenariu de test folosind BDD}]
+Scenario X: Titlul scenariului
+Given: Contextul în care va fi efectuat testul
+When: Este observat un anume eveniment 
+(ex. click-ul unui utilizator pe un buton anume)
+Then: Rezultatul dorit
+\end{lstlisting}
+
+Această standardizare oferă posibilitatea transpunerii directe a scenariilor în teste automate pentru a putea valida funcționalitățile sistemului.
+
+În articolul realizat de \cite{Cristea2022}, am abordat testarea funcțională a suitei de aplicații propuse folosind concepte inspirate din metodologia \acrshort{bdd}. Deoarece testarea unitară nu poate asigura funcționarea corectă a unui sistem atunci când mai multe componente sunt integrate împreună, testele funcționale au avut în vedere angrenarea mai multor aplicații din suită și verificarea fluxurilor de date care circulă între ele.
+
+Pentru descrierea și automatizarea testelor am utilizat biblioteca Python Behave \footnote{Documentația și codul sursă pot fi găsite la adresa \url{https://behave.readthedocs.io/en/stable/}} care permite formularea scenariilor de test în limbaj natural și le asociază cu testele automate scrise în limbajul Python. Deși scenariile sunt descrise în limbaj natural, ele trebuie să respecte sintaxa impusă de standardul Gherkin \footnote{Mai multe informații și specificația completă a limbajului pot fi găsite la adresa \url{https://cucumber.io/docs/gherkin/}}, care asigură structurarea corectă a scenariilor de test. În cardul articolului am prezentat un exemplu de scenariu de test pe care îl vom reproduce mai jos în secvența cu numărul \ref{exemplu_bdd}. Acest scenariu este declanșat de regulile de automatizare din aplicația \textit{hub} și vizează setarea corespunzătoare e luminozității \textit{smart TV}-ului în funcție de datele colectate de senzorul de luminozitate al ferestrei. Testul va fi executat de \textit{framework}-ul Behave pentru toate valorile din tabelul de exemple.
+
+\begin{lstlisting}[caption={Exemplu de scenariu de test BDD pentru aplicațiile din suită}, label={exemplu_bdd}]
+(*\textbf{Feature:}*) TV auto-brightness
+  (*\textbf{Scenario Outline:}*) TV brightness is set based on window luminosity level
+    (*\textbf{Given}*) TV brightness is set to <X>, window luminosity to <Y> and base luminosity to <Z>
+      (*\textbf{When}*) automation rules are triggered for TV
+      (*\textbf{Then}*) TV brightness is set to max(10 - <Y>/10 + <Z>, <Z>) <= 10
+     (*\textbf{Examples:}*)
+      | X  | Y  | Z  |
+      | 3  | 20 | 1  |
+      | 4  | 70 | 0  |
+      | 1  | 0  | 10 |
+\end{lstlisting}
+
+Pentru a adăuga un nou test în cadrul suitei de aplicații este nevoie de formularea lui în limbaj natural urmând constrângerile impuse de sintaxa Gherkin, iar apoi realizarea testului automat în limbajul Python. Un exemplu de astfel de test se poate regăsi în fragmentul cu numărul \ref{exemplu_python_behave}. Pasul \textit{given} creează contextul propice testării, anume setează senzorii la valorile dorite. Pasul \textit{when} declanșează regulile de automatizare din interiorul aplicației \textit{hub}, iar apoi pasul \textit{then} va verifica dacă valoarea luminozității colectată de la \textit{smart TV} corespunde cu rezultatul așteptat.
+
+\begin{lstlisting}[caption={Exemplu test automat folosind biblioteca Behave}, label={exemplu_python_behave}, language={Python}]
+
+from behave import *
+import app
+
+@given('TV brightness is set to {X}, window luminosity to {Y} and base luminosity to {Z}')
+def step_impl(context, X, Y, Z):
+    app.env.clients["smarttv"].set_brightness_level_post(int(X))
+    
+    app.env.clients["windwow"]\
+        .settings_setting_name_setting_value_post(
+            "luminosity", 
+            int(Y),
+        )
+
+    app.env.settings["tv_base_brightness"] = int(Z)
+
+@when('automation rules are triggered for TV')
+def step_impl(context):
+    app.env.run_simple()
+
+@then('TV brightness is set to max(10 - {Y}/10 + {Z}, {Z}) <= 10')
+def step_impl(context, Y, Z):
+    Y = float(Y)
+    Z = float(Z)
+    assert app.env.data["smarttv"]["brightness"] == int(
+        min(max(10 - Y/10 + Z, Z), 10)
+    )
+\end{lstlisting}
+
+În urma aplicării acestei tehnici pe suita de aplicații am remarcat următoarele:
+\begin{itemize}
+    \item tehnica este manuală, deci limitată de experiența și timpul investit de cel care testează
+    \item toate defectele existente în cardul suitei de aplicații pot fi detectate și reproduse, însă succesul detectării este dependent de factorul uman
+    \item configurarea mediului de testare nu aduce complexitate suplimentară
+\end{itemize}
+
+Concluzionăm că acest tip de testare este potrivit atât testării individuale a aplicațiilor, cât și a acestora după integrare, însă această tehnică este mai degrabă aplicabilă în procesul de dezvoltare pentru testarea scenariilor pozitive, decât pentru descoperirea de defecte neobișnuite. Automatizarea generării de scenarii de test variate și reducerea dependenței față de factorul uman pot reprezenta două direcții interesante de cercetare ce ar ajuta la îmbunătățirea tehnicii.
 
 \subsection{PatrIoT Framework}
 
@@ -30,22 +114,39 @@ Pentru a dovedi relevanța suitei de aplicații construită anterior vom desfă�
 
 % TODO: de vazut ce mai zice rares si ce experimente mai face el
 
-\subsection{afl++}
+\subsection{FirmAFL}
 
 % TODO: trebuie sa mai gasesc macar un fuzzer pe care sa-l rulez pe dataset ca sa am ce compara
+
+\section{Analiză statică}
+
+Tehnicile anterioare evaluate pot fi toate considerate dinamice în natură, deoarece presupun executarea codului aplicațiilor și observarea comportamentului în timpul execuției. O altă abordare care necesită mai puține resurse computaționale și nu este preocupată de executarea aplicațiilor este analiza statică. 
+
+Analiza statică presupune în general mecanisme de recunoaștere și deducție de tipare problematice în codul sursă sau codul mașină al aplicațiilor. Așa cum ne spune analiza realizată de \cite{Gosain2015}, există mai multe tehnici de analizare statică:
+\begin{itemize}
+    \item recunoașterea constructelor sintactice problematice
+    \item reprezentarea stărilor aplicației ca noduri într-un graf și analizarea fluxurilor de date
+    \item interpretarea abstractă a programelor
+    \item analiza bazată pe constrângeri și satisfacerea acestora
+\end{itemize}
+
+Această tehnică de analiză nu depinde de date de intrare concrete pentru aplicație și nici nu necesită analizarea întregului program pentru a putea oferi concluzii pertinente. Pe de altă parte însă, aceste caracteristici cauzează o rată mare a fals-pozitivelor și o imposibilitate a verificării corectitudinii funcționale. Astfel este o tehnică utilă pentru detectarea defectelor, însă nu suficient de comprehensivă pentru a fi singura tehnică utilizată.
+
+În următoarele paragrafe vom prezenta evaluarea a trei unelte software pentru analizarea statică a programelor, două dintre ele fiind orientate pe analiza codului \textit{C/C++}, iar cea de a treia analizează aplicații care nu au codul sursă disponibil. În secțiunea următoare ne vom concentra pe un tip aparte de analiză statica, și anume analiza formală.
+
+\subsection{cppcheck}
+
+\textit{cppcheck} \footnote{Documentația și codul sursă al aplicației pot fi găsite la \url{https://cppcheck.sourceforge.io/}.}
+
+\subsection{weggli}
+
+\textit{weggli} \footnote{Codul sursă al aplicației poate fi găsit la \url{https://github.com/googleprojectzero/weggli}.}
+
+\subsection{cwe\_checker} 
+
+\textit{cwe\_checker} \footnote{Codul sursă al aplicației \textit{cwe\_checker} poate fi găsit la \url{https://github.com/fkie-cad/cwe_checker}.}
 
 \section{Analiză cu modelare formală}
 
 % TODO: de gasit un paper despre analiza formala si modelare
 % TODO: de reprodus macar un bug folosind modelarea formala si un solver gen Z3 sau un theorem prover
-
-\section{Analiză statică}
-
-\subsection{cwe\_checker} 
-
-\textit{cwe\_checker} \footnote{Codul sursă al aplicației \textit{cwe\_checker} poate fi găsit la \url{https://github.com/fkie-cad/cwe_checker}}
-
-
-\subsection{cppcheck}
-
-\textit{cppcheck} \footnote{Documentația și codul sursă al aplicației pot fi găsite la \url{https://cppcheck.sourceforge.io/}}
