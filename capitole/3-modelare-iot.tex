@@ -22,7 +22,7 @@ Un alt exemplu poate fi reprezentat de o linie de producție industrială comple
 
 Modelele arhitecturale au evoluat în timp și continuă să evolueze, așa că le vom analiza în ordinea complexității lor.
 
-\subsection{\textit{3-layer}}
+\subsection*{\textit{3-layer}}
 % TODO diagram 3 layer
 
 \cite{MiaoWu2010} spune că în ciuda lipsei unei definiții unificate pentru \acrshort{iot}, arhitectura \textit{3-layer} este larg acceptată și cunoscută. Acest fapt este bine fundamentat, deoarece găsim referințe la acest model arhitectural în multiple publicații la care ne vom referi în paragrafele următoare. Nivelele componente ale acestei arhitecturi sunt:
@@ -41,7 +41,7 @@ Procesarea datelor și executarea fluxurilor specifice se petrece la nivelul apl
 
 \cite{Lin2017} constată ca deși această arhitectură este fundamentală și simplă, funcționalitățile și operațiunile desfașurate de sistem la nivelul rețelei și aplicației sunt diverse și complexe. În opinia autorilor este nevoie de dezvoltarea unui nivel de serviciu \textit{service layer} care să medieze interacțiunea dintre rețea și aplicație. Acest nivel adițional ar facilita o mai mare flexibilitate sistemului.
 
-\subsection{\textit{5-layer}}
+\subsection*{\textit{5-layer}}
 % TODO diagrama 5 layer
 
 Arhitectura \textit{3-layer} nu conține metode de management suficient de bune și nu ia în considerare nevoia de a modela domeniile de \textit{business} în perspectiva \cite{MiaoWu2010}. Pentru a combate aceste dificultăți, autorii propun o arhitectura cu cinci nivele, după cum urmează:
@@ -58,7 +58,7 @@ Primele două nivele corespund cu cele din arhitectura \textit{3-layer}, îndepl
 
 În final avem de a face cu nivelul de \textit{business} care ar trebui să reprezinte un nivel de management peste nivelul aplicației, fiind preocupat de modelul de \textit{business} și dezvoltarea pe termen lung. Din păcate, autorii nu pun la dispoziție o descriere detaliată, aplicarea acestui tip de arhitectură rămânând la latitudinea dezvoltatorului. O imagine mai clară asupra nivelului de \textit{business} ne-o oferă \cite{Khan2012} specificând că acesta conține modelele de \textit{business}, grafice și organigrame bazate pe datele obținute din nivelul de aplicație. Scopul acestui nivel este să producă strategii și decizii de \textit{business}, deci este un nivel de interacțiune între om și mașină.
 
-\subsection{\textit{Service Oriented Architecture}}
+\subsection*{\textit{Service Oriented Architecture}}
 % TODO: diagramă
 
 O arhitectură orientată pe servicii, în orginal \acrfull{soa}, propune împărțirea componentelor și funcționalităților unui sistem un unități mici și independente numite servicii. Această arhitectură nu impune un număr fix de nivele, însă trebuie sa existe cel puțin un nivel care facilitează două activități fundamentale: descoperirea serviciilor (\textit{service discovery}) și invocarea acestora (\textit{service calling}). 
@@ -67,7 +67,7 @@ O arhitectură orientată pe servicii, în orginal \acrfull{soa}, propune împă
 
 O altă perspectivă asupra unui posibil tip de \acrshort{soa} vine din partea \cite{LuTan2010} care propune o arhitectură \textit{5-layer} modificată. Pe langă nivelul rețelei, aceștia introduc un nivel de coordonare al serviciilor care are rolul de a unifica comunicarea asigurând interoperabilitatea. Din păcate, nu sunt oferite detalii suplimentare despre implementarea acestui tip de arhitectură.
 
-\subsection{\textit{API-oriented}}
+\subsection*{\textit{API-oriented}}
 
 Deoarece arhitecturile de tip \acrshort{soa} sunt complexe, iar procesele de coordonare și descoperire a serviciilor necesită un efort considerabil de dezvoltare, alternative mai simple au fost introduse. \cite{Khodadadi2016} prezintă o imagine de ansamblu a arhitecturilor orientate spre \acrfull{api}. % TODO: sa continui aici, nu mai am idei
 

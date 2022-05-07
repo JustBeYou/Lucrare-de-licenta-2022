@@ -103,12 +103,48 @@ Concluzionăm că acest tip de testare este potrivit atât testării individuale
 
 % TODO: !!! trebuie sa fac eu experimentele cu PatrIoT si sa compar
 
-\section{Testarea exploratorie (\emph{fuzzing})}
+\section{Testarea exploratorie folosind \emph{fuzzing}}
+
+Testarea exploratorie își propune găsirea de stări marginale și excepționale ale unui sistem pentru a descoperi un număr cât mai mare de defecte. Acest tip de testare nu se concentrează în general pe scenariile pozitive, ci pe cele negative în care datele de intrare sunt de multe ori invalide parțial sau total.
+
+În paragrafele următoare ne vom concentra pe o tehnică anume de testare exploratorie și anume \textit{fuzzing}-ul. Așa cum ne explică \cite{Manes2021}, \textit{fuzzing}-ul este o tehnică larg răspândită care presupune trimiterea de date de intrare malformate semantic sau sintactic spre un sistem software și monitorizarea reacției acestuia. 
+
+În general, un algoritm de \textit{fuzzing} generează în mod aleator mutații pentru un set de date de intrare, apoi trimite datele de intrare la sistemul software țintă, iar în final evaluează starea rezultată și constată dacă au fost detectate defecte. Aceși pași se pot desfășura la infinit sau într-un interval de timp stabilit. În fragmentul \ref{fuzzing_algo} este reprezentată în pseudocod structura generală a algoritmului descris, așa cum ne-o înfățișează \cite{Manes2021}.
+
+\begin{lstlisting}[label={fuzzing_algo}, caption={Structura generală a unui algoritm de fuzzing}]
+(*\textbf{Input:}*) Configuration, (*$t_{limit}$*)
+(*\textbf{Output:}*) Bugs
+
+while (*$t_{elapsed}$*) < (*$t_{limit}$*):
+    Configuration (*$\leftarrow$*) Schedule(Configuration, (*$t_{elapsed}$*), (*$t_{limit}$*))
+    TestCase (*$\leftarrow$*) Generate(Configuration)
+    NewBugs, ExecInfo (*$\leftarrow$*) Evaluate(Configuration, TestCase)
+    Configuration (*$\leftarrow$*) Update(Configuration, ExecInfo)
+    Bugs (*$\leftarrow$*) Bugs (*$\bigcup$*) NewBugs)
+    
+return Bugs
+\end{lstlisting}
+
+Deși structura generală este simplă, exista o gamă foarte largă de algoritmi de \textit{fuzzing}. Distingem trei categorii importante în funcție de cunoștințele semantice pe care acesta le deține despre interacțiunea cu sistemul:
+
+\begin{itemize}
+    \item \textit{black-box} - nu cunosc semantica datelor de intrare și nici codul sursă al aplicației
+    \item \textit{grey-box} - dețin informații parțiale despre semantica datelor de intrare și au parte de un \textit{feedback} parțial din partea sistemului țintă
+    \item \textit{white-box} - au cunoștințe depline despre semantica datelor și sistemul vizat
+\end{itemize}
+
+Un aspect foarte important al \textit{fuzzer}-elor este modul în care generează noi date de intrare. O abordare foarte populară este utilizarea de algoritmi genetici, astfel alegându-se mostrele cu cel mai mare succes raportat de o anume metrică. Pentru metricile de succes se utilizează în general acoperirea totală a codului (sursă sau cod mașină în funcție de caz).
+
+Pentru detectarea defectelor este nevoie de un așa numit \textit{oracol}. Acesta este un mecanism care permite evaluarea stării sistemului țintă și poate raporta anumite tipuri de defecte. De exemplu, sistemul de operare va semnala un acces invalid de memorie, astfel un algoritm de \textit{fuzzing} poate lua la cunoștință că a descoperit un defect.
+
+În paragrafele următoare vom analiza rezultatele a două \textit{fuzzer}-e ... TODO: de continuat aici
 
 % TODO: de explicat ce inseamna testare exploratorie
 % TODO: teorie fuzzing scurta, de gasit un paper de citat
 
 \subsection{RESTler}
+
+TODO: astept sa vad ce mai face rares cu fuzzing-ul
 
 % TODO: de citat paper-ul de la restler si de folosit balariile din paper-ul de fuzzing de la SASHA
 
@@ -136,17 +172,61 @@ Această tehnică de analiză nu depinde de date de intrare concrete pentru apli
 
 \subsection{cppcheck}
 
-\textit{cppcheck} \footnote{Documentația și codul sursă al aplicației pot fi găsite la \url{https://cppcheck.sourceforge.io/}.}
+\textit{cppcheck} \footnote{Documentația și codul sursă al aplicației pot fi găsite la \url{https://cppcheck.sourceforge.io/}.} este un analizator static specializat pentru limbajele C și C++. Acesta urmărește detectarea de greșeli comune în programare și se concentrează în special pe acele greșeli care pot cauza comportamente nedefinite sau sunt periculoase. Acest analizator promite o rată mică a fals pozitivelor.
+
+Am utilizat \textit{cppcheck} pentru a analiza toate cele cinci aplicații C++ din suită fără a fi nevoie de configurări suplimentare. Procesul de detectare al potențialelor probleme este în totalitate automat, însă pentru stabilirea sigură a existenței unui defect și reproducerea acestuia este nevoie de intervenția manuală a unui expert.
+
+Utilitarul a reușit să identifice cu succes două dintre defectele prezente în aplicații, acestea fiind foarte comune conform \acrfull{cwe}. În fragmentul \ref{defecte_cppcheck}, putem observa mesajele care semnalează dereferențierea unui pointer nul și dubla dealocare de memorie. 
+
+\begin{lstlisting}[caption={Cele două defecte detectate de \textit{cppcheck}}, label={defecte_cppcheck}]
+windwow/Window.cpp:120:33: warning: Possible null pointer dereference: p [nullPointer]
+flowerpower/src/SmartPotEndpoint.cpp:436:24: error: Memory pointed to by 'target_p' is freed twice. [doubleFree]
+\end{lstlisting}
+
+Din păcate, \textit{cppcheck} nu reușește să proceseze întodeauna corect semanticile mai complicate, în fragmentul \ref{fals_pozitive_cppcheck} avem un exemplu de semnal fals pozitiv. Variabila $setResponse$ este inițializată pe ambele ramuri ale unei structuri $if - else$ care urmează după declararea acesteia, însă \textit{cppcheck} nu interpretează corect acest construct.
+
+\begin{lstlisting}[caption={Exemplu de fals pozitiv detectat de \textit{cppcheck}}, label={fals_pozitive_cppcheck}]
+windwow/WindowEndpoint.cpp:257:21: note: Uninitialized variable: setResponse
+\end{lstlisting}
+
+Observăm ca \textit{cppcheck} este potrivit doar pentru analizarea unor greșeli comune și relativ simple de programare, acesta fiind exclusiv pentru limbajele C și C++. Analizatorul nu poate fi utilizat pentru testarea interacțiunilor dintre aplicații și nici pentru descoperirea de defecte cauzate de tranziții de stare complexe. Deși este rapid și nu necesită configurări, aria de aplicabilitate a acestei unelte rămâne destul de restrânsă.
 
 \subsection{weggli}
 
-\textit{weggli} \footnote{Codul sursă al aplicației poate fi găsit la \url{https://github.com/googleprojectzero/weggli}.}
+\textit{weggli} \footnote{Codul sursă al aplicației poate fi găsit la \url{https://github.com/googleprojectzero/weggli}.} este un utilitar pentru căutări cu înțelegere semantică în interiorul codului sursă al programelor C și C++. Deși nu necesită configurări suplimentare, acest utilitar nu vine cu o serie de reguli de analiză standard, această sarcină rămânând în grija expertului care îl folosește.
+
+Sintaxa folosită pentru efectuarea de căutări este similară cu cea a aplicației \textit{grep} \footnote{Utilitar foarte popular pe sistemele \textit{*nix} pentru a căuta în interiorul documentelor text folosind expresii regulate (\textit{regex}).} însă permite și utilizarea de variabile sau constructe sintactice complicate, nu doar căutări \textit{regex}.
+
+În fragmentul \ref{weggli_nullptr} este o expresie ce va semnala toate zonele de cod sursă unde se inițializează un pointer de tip arbitrar cu valoarea nulă, iar apoi acesta este accesat fără a fi inițializat cu o valoare nenulă. \textit{var} ține locul oricărui identificator și poate fi menționat în continuare, iar caracterul \textit{underscore} poate înlocui orice expresie, observăm astfel cât de ușor putem identifica structuri semantice complexe.
+
+\begin{lstlisting}[label={weggli_nullptr}, caption={Interogare weggli pentru a găsi accesări de pointer nul}]
+weggli --cpp '{
+    _* $var = nullptr;
+    $var[_];
+}' ./apps/
+\end{lstlisting}
+
+Un alt exemplu poate fi observat în \ref{weggli_json}, unde am dorit să găsim toate accesările de chei \acrshort{json} fără verificare corespunzătoare.
+
+\begin{lstlisting}[label={weggli_json}, caption={Interogare weggli pentru a găsi accesarea de chei JSON fără verificare}]
+weggli --cpp '{ 
+    Document $document;
+    NOT: $document.HasMember(_);
+    $document[_]._();
+}' ./apps/
+\end{lstlisting}
+
+\textit{weggli} poate detecta majoritatea defectelor prezente în suită care sunt legate de un construct de cod C++. Dezavantajele acestei abordări sunt însă reprezentate de faptul că este nevoie de interacțiune umană pentru a formula interogările, majoritatea putând rezulta în niciun defect găsit, dar și faptul că nu se pot detecta defecte de integrare sau logică mai complexă.
 
 \subsection{cwe\_checker} 
 
 \textit{cwe\_checker} \footnote{Codul sursă al aplicației \textit{cwe\_checker} poate fi găsit la \url{https://github.com/fkie-cad/cwe_checker}.}
 
+TODO: tre sa compilez aplicatiile si sa rulez asta, dar ma mai gandesc, poate il scot de tot ca s-ar putea sa fie suficient ce am deja
+
 \section{Analiză cu modelare formală}
+
+TODO: asta e cam complicată, o s-o las la urmă, poate reușesc ca demonstrez măcar un bug așa
 
 % TODO: de gasit un paper despre analiza formala si modelare
 % TODO: de reprodus macar un bug folosind modelarea formala si un solver gen Z3 sau un theorem prover
