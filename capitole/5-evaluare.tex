@@ -21,13 +21,13 @@ Pentru a dovedi relevanța suitei de aplicații construită anterior vom desfă�
 % TODO: de vorbit la general despre testarea functionala, dar scurt
 Am explicat în capitolul al doilea, secțiunea 2.1.2, ce este testarea funcțională și care sunt caracteristicile acesteia, așa că nu vom relua explicarea noțiunii. În secțiunea curentă vom vorbi despre o serie de tehnici de testare funcțională pe care le-am utilizat atât pentru a valida funcționarea corectă a suitei de aplicații, cât și pentru a oferi dovada reproductibilității defectelor existente.
 
-Vom compara o abordare proprie inspirată de principiile metodologiei \acrfull{bdd}, metodologie despre care vom vorbi pe larg mai jos, și un \textit{framework} experimental realizat de \cite{Bures2021} pentru testarea de integrare și interoperabilitate a sistemelor \acrshort{iot}.
+Vom compara o abordare proprie inspirată de principiile metodologiei \acrfull{bdd}, metodologie despre care vom vorbi pe larg mai jos, și un \textit{framework} experimental realizat de \citet{Bures2021} pentru testarea de integrare și interoperabilitate a sistemelor \acrshort{iot}.
 
 \subsection{Metodologia Behaviour-Driven Development}
 
 % TODO: de folosit continutul din paper
 
-\acrfull{bdd} este o metodologie de dezvoltare succesoare a \acrfull{tdd} care se preocupă de crearea de specificații clare și automatizabile pentru testarea sistemului țintă. Pentru a atinge acest scop, \acrshort{bdd} propune o terminologie standardizată pentru proiectarea cazurilor de test pentru a ușura formularea lor atunci când mai multe părți sunt implicate (\textit{stakeholders}), cum ar fi dezvoltatori, clienți sau personalul de vânzări. Vom prezenta pe scurt această metodologie bazându-ne pe studiul realizat de \cite{Solis2011} despre caracteristicile \acrshort{bdd}.
+\acrfull{bdd} este o metodologie de dezvoltare succesoare a \acrfull{tdd} care se preocupă de crearea de specificații clare și automatizabile pentru testarea sistemului țintă. Pentru a atinge acest scop, \acrshort{bdd} propune o terminologie standardizată pentru proiectarea cazurilor de test pentru a ușura formularea lor atunci când mai multe părți sunt implicate (\textit{stakeholders}), cum ar fi dezvoltatori, clienți sau personalul de vânzări. Vom prezenta pe scurt această metodologie bazându-ne pe studiul realizat de \citet{Solis2011} despre caracteristicile \acrshort{bdd}.
 
 Conform studiului, această metodologie pune accent pe folosirea unui limbaj comun, standardizat și independent de domeniul de aplicare pentru descrierea scenariilor de test. Scenariile sunt apoi formulate ca text în limbaj natural, cât mai simplu posibil și orientate spre descrierea de comportamente (en. \textit{behaviour}). De exemplu, formatul cel mai des întâlnit pentru formularea scenariilor de test poate fi observat mai jos.
 
@@ -41,7 +41,7 @@ Then: Rezultatul dorit
 
 Această standardizare oferă posibilitatea transpunerii directe a scenariilor în teste automate pentru a putea valida funcționalitățile sistemului.
 
-În articolul realizat de \cite{Cristea2022}, am abordat testarea funcțională a suitei de aplicații propuse folosind concepte inspirate din metodologia \acrshort{bdd}. Deoarece testarea unitară nu poate asigura funcționarea corectă a unui sistem atunci când mai multe componente sunt integrate împreună, testele funcționale au avut în vedere angrenarea mai multor aplicații din suită și verificarea fluxurilor de date care circulă între ele.
+În articolul realizat de \citet{Cristea2022}, am abordat testarea funcțională a suitei de aplicații propuse folosind concepte inspirate din metodologia \acrshort{bdd}. Deoarece testarea unitară nu poate asigura funcționarea corectă a unui sistem atunci când mai multe componente sunt integrate împreună, testele funcționale au avut în vedere angrenarea mai multor aplicații din suită și verificarea fluxurilor de date care circulă între ele.
 
 Pentru descrierea și automatizarea testelor am utilizat biblioteca Python Behave \footnote{Documentația și codul sursă pot fi găsite la adresa \url{https://behave.readthedocs.io/en/stable/}} care permite formularea scenariilor de test în limbaj natural și le asociază cu testele automate scrise în limbajul Python. Deși scenariile sunt descrise în limbaj natural, ele trebuie să respecte sintaxa impusă de standardul Gherkin \footnote{Mai multe informații și specificația completă a limbajului pot fi găsite la adresa \url{https://cucumber.io/docs/gherkin/}}, care asigură structurarea corectă a scenariilor de test. În cardul articolului am prezentat un exemplu de scenariu de test pe care îl vom reproduce mai jos în secvența cu numărul \ref{exemplu_bdd}. Acest scenariu este declanșat de regulile de automatizare din aplicația \textit{hub} și vizează setarea corespunzătoare e luminozității \textit{smart TV}-ului în funcție de datele colectate de senzorul de luminozitate al ferestrei. Testul va fi executat de \textit{framework}-ul Behave pentru toate valorile din tabelul de exemple.
 
@@ -107,9 +107,9 @@ Concluzionăm că acest tip de testare este potrivit atât testării individuale
 
 Testarea exploratorie își propune găsirea de stări marginale și excepționale ale unui sistem pentru a descoperi un număr cât mai mare de defecte. Acest tip de testare nu se concentrează în general pe scenariile pozitive, ci pe cele negative în care datele de intrare sunt de multe ori invalide parțial sau total.
 
-În paragrafele următoare ne vom concentra pe o tehnică anume de testare exploratorie și anume \textit{fuzzing}-ul. Așa cum ne explică \cite{Manes2021}, \textit{fuzzing}-ul este o tehnică larg răspândită care presupune trimiterea de date de intrare malformate semantic sau sintactic spre un sistem software și monitorizarea reacției acestuia. 
+În paragrafele următoare ne vom concentra pe o tehnică anume de testare exploratorie și anume \textit{fuzzing}-ul. Așa cum ne explică \citet{Manes2021}, \textit{fuzzing}-ul este o tehnică larg răspândită care presupune trimiterea de date de intrare malformate semantic sau sintactic spre un sistem software și monitorizarea reacției acestuia. 
 
-În general, un algoritm de \textit{fuzzing} generează în mod aleator mutații pentru un set de date de intrare, apoi trimite datele de intrare la sistemul software țintă, iar în final evaluează starea rezultată și constată dacă au fost detectate defecte. Aceși pași se pot desfășura la infinit sau într-un interval de timp stabilit. În fragmentul \ref{fuzzing_algo} este reprezentată în pseudocod structura generală a algoritmului descris, așa cum ne-o înfățișează \cite{Manes2021}.
+În general, un algoritm de \textit{fuzzing} generează în mod aleator mutații pentru un set de date de intrare, apoi trimite datele de intrare la sistemul software țintă, iar în final evaluează starea rezultată și constată dacă au fost detectate defecte. Aceși pași se pot desfășura la infinit sau într-un interval de timp stabilit. În fragmentul \ref{fuzzing_algo} este reprezentată în pseudocod structura generală a algoritmului descris, așa cum ne-o înfățișează \citet{Manes2021}.
 
 \begin{lstlisting}[label={fuzzing_algo}, caption={Structura generală a unui algoritm de fuzzing}]
 (*\textbf{Input:}*) Configuration, (*$t_{limit}$*)
@@ -146,6 +146,8 @@ Pentru detectarea defectelor este nevoie de un așa numit \textit{oracol}. Acest
 
 TODO: astept sa vad ce mai face rares cu fuzzing-ul
 
+\citet{Godefroid2020}
+
 % TODO: de citat paper-ul de la restler si de folosit balariile din paper-ul de fuzzing de la SASHA
 
 % TODO: de vazut ce mai zice rares si ce experimente mai face el
@@ -158,7 +160,7 @@ TODO: astept sa vad ce mai face rares cu fuzzing-ul
 
 Tehnicile anterioare evaluate pot fi toate considerate dinamice în natură, deoarece presupun executarea codului aplicațiilor și observarea comportamentului în timpul execuției. O altă abordare care necesită mai puține resurse computaționale și nu este preocupată de executarea aplicațiilor este analiza statică. 
 
-Analiza statică presupune în general mecanisme de recunoaștere și deducție de tipare problematice în codul sursă sau codul mașină al aplicațiilor. Așa cum ne spune analiza realizată de \cite{Gosain2015}, există mai multe tehnici de analizare statică:
+Analiza statică presupune în general mecanisme de recunoaștere și deducție de tipare problematice în codul sursă sau codul mașină al aplicațiilor. Așa cum ne spune analiza realizată de \citet{Gosain2015}, există mai multe tehnici de analizare statică:
 \begin{itemize}
     \item recunoașterea constructelor sintactice problematice
     \item reprezentarea stărilor aplicației ca noduri într-un graf și analizarea fluxurilor de date
@@ -218,11 +220,11 @@ weggli --cpp '{
 
 \textit{weggli} poate detecta majoritatea defectelor prezente în suită care sunt legate de un construct de cod C++. Dezavantajele acestei abordări sunt însă reprezentate de faptul că este nevoie de interacțiune umană pentru a formula interogările, majoritatea putând rezulta în niciun defect găsit, dar și faptul că nu se pot detecta defecte de integrare sau logică mai complexă.
 
-\subsection{cwe\_checker} 
+%\subsection{cwe\_checker} 
 
-\textit{cwe\_checker} \footnote{Codul sursă al aplicației \textit{cwe\_checker} poate fi găsit la \url{https://github.com/fkie-cad/cwe_checker}.}
+%\textit{cwe\_checker} \footnote{Codul sursă al aplicației \textit{cwe\_checker} poate fi găsit la \url{https://github.com/fkie-cad/cwe_checker}.}
 
-TODO: tre sa compilez aplicatiile si sa rulez asta, dar ma mai gandesc, poate il scot de tot ca s-ar putea sa fie suficient ce am deja
+%TODO: tre sa compilez aplicatiile si sa rulez asta, dar ma mai gandesc, poate il scot de tot ca s-ar putea sa fie suficient ce am deja
 
 \section{Analiză cu modelare formală}
 
