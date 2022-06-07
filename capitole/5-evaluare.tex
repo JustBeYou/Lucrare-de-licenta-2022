@@ -1,37 +1,32 @@
 \chapter{Evaluarea unor tehnici de testare}
 
-Pentru a dovedi relevanța suitei de aplicații construită anterior vom desfășura o serie de experimente folosind mai multe tehnici și tehnologii adecvate pentru testarea sistemelor \acrshort{iot}. 
+Pentru a dovedi relevanța suitei de aplicații construită anterior vom desfășura o serie de experimente folosind câteva tehnici și tehnologii de testare. Acestea fac parte din următoarele categorii: testare funcțională, testare exploratorie, analiză statică și verificare formală.
 
-% TODO: de palavragit un pic despre cercetarea empirica si de ce e buna
-% TODO: de vorbit despre analiza cantitativa vs analiza calitativa
-% TODO: de ales niste metrici de evaluare si motivat de ce
-% TODO: de rezumat tehnicile si structura capitolului
+În cardul analizei, ne vom concentra asupra următoarelor criterii de evaluare:
 
-% criterii evaluare:
-% automat vs manual
-% timp necesar pentru setup, complexitate setup
-% tipul de defecte care pot fi detectate
-% timp necesar pentru descoperirea defectelor
-% eficienta (cat la suta din defectele existente au fost detectate)
-% limitari si dezavantaje
-% futher work
+\begin{itemize}
+    \item tehnica este automată sau manuală (sau parțial automată)
+    \item complexitatea pregătirii mediului de testare
+    \item categoriile de defecte (\textit{bug}-uri) care pot fi detectate
+    \item numărul de defecte descoperite (raportat la timpul de execuție dacă este cazul)
+    \item adaptarea la provocările specifice \acrshort{iot} (eterogenitate, sisteme distribuite)
+    \item limitări și puncte slabe
+\end{itemize} 
 
 \section{Testarea funcțională}
 
-% TODO: de vorbit la general despre testarea functionala, dar scurt
 Am explicat în capitolul al doilea, secțiunea 2.1.2, ce este testarea funcțională și care sunt caracteristicile acesteia, așa că nu vom relua explicarea noțiunii. În secțiunea curentă vom vorbi despre o serie de tehnici de testare funcțională pe care le-am utilizat atât pentru a valida funcționarea corectă a suitei de aplicații, cât și pentru a oferi dovada reproductibilității defectelor existente.
 
-Vom compara o abordare proprie inspirată de principiile metodologiei \acrfull{bdd}, metodologie despre care vom vorbi pe larg mai jos, și un \textit{framework} experimental realizat de \citet{Bures2021} pentru testarea de integrare și interoperabilitate a sistemelor \acrshort{iot}.
+% Vom compara o abordare proprie inspirată de principiile metodologiei \acrfull{bdd}, metodologie despre care vom vorbi pe larg mai jos, și un \textit{framework} experimental realizat de \citet{Bures2021} pentru testarea de integrare și interoperabilitate a sistemelor \acrshort{iot}. N-am mai comparat
 
 \subsection{Metodologia Behaviour-Driven Development}
-
-% TODO: de folosit continutul din paper
+\label{cap:testare_bdd}
 
 \acrfull{bdd} este o metodologie de dezvoltare succesoare a \acrfull{tdd} care se preocupă de crearea de specificații clare și automatizabile pentru testarea sistemului țintă. Pentru a atinge acest scop, \acrshort{bdd} propune o terminologie standardizată pentru proiectarea cazurilor de test pentru a ușura formularea lor atunci când mai multe părți sunt implicate (\textit{stakeholders}), cum ar fi dezvoltatori, clienți sau personalul de vânzări. Vom prezenta pe scurt această metodologie bazându-ne pe studiul realizat de \citet{Solis2011} despre caracteristicile \acrshort{bdd}.
 
-Conform studiului, această metodologie pune accent pe folosirea unui limbaj comun, standardizat și independent de domeniul de aplicare pentru descrierea scenariilor de test. Scenariile sunt apoi formulate ca text în limbaj natural, cât mai simplu posibil și orientate spre descrierea de comportamente (en. \textit{behaviour}). De exemplu, formatul cel mai des întâlnit pentru formularea scenariilor de test poate fi observat mai jos.
+Conform studiului, această metodologie pune accent pe folosirea unui limbaj comun, standardizat și independent de domeniul de aplicare pentru descrierea scenariilor de test. Scenariile sunt apoi formulate ca text în limbaj natural, cât mai simplu posibil și orientate spre descrierea de comportamente (en. \textit{behaviour}). De exemplu, formatul cel mai des întâlnit pentru formularea scenariilor de test poate fi observat mai jos în fragmetul \ref{bdd_exemplu_limbaj}.
 
-\begin{lstlisting}[caption={Structură comună a unui scenariu de test folosind BDD}]
+\begin{lstlisting}[caption={Structură comună a unui scenariu de test folosind BDD}, label={bdd_exemplu_limbaj}]
 Scenario X: Titlul scenariului
 Given: Contextul în care va fi efectuat testul
 When: Este observat un anume eveniment 
@@ -41,9 +36,9 @@ Then: Rezultatul dorit
 
 Această standardizare oferă posibilitatea transpunerii directe a scenariilor în teste automate pentru a putea valida funcționalitățile sistemului.
 
-În articolul realizat de \citet{Cristea2022}, am abordat testarea funcțională a suitei de aplicații propuse folosind concepte inspirate din metodologia \acrshort{bdd}. Deoarece testarea unitară nu poate asigura funcționarea corectă a unui sistem atunci când mai multe componente sunt integrate împreună, testele funcționale au avut în vedere angrenarea mai multor aplicații din suită și verificarea fluxurilor de date care circulă între ele.
+În articolul realizat de \citet{Cristea2022}, am abordat testarea funcțională a suitei de aplicații propuse folosind concepte inspirate din metodologia \acrshort{bdd}. Deoarece testarea unitară nu poate asigura funcționarea corectă a unui sistem atunci când mai multe componente sunt integrate împreună, testele funcționale au avut în vedere angrenarea mai multor aplicații din suită și verificarea fluxurilor de date care circulă între ele. De asemenea, această metodă servește ca exemplu de bază pentru utilizarea și modul de funcționare al suitei de aplicații construite.
 
-Pentru descrierea și automatizarea testelor am utilizat biblioteca Python Behave \footnote{Documentația și codul sursă pot fi găsite la adresa \url{https://behave.readthedocs.io/en/stable/}} care permite formularea scenariilor de test în limbaj natural și le asociază cu testele automate scrise în limbajul Python. Deși scenariile sunt descrise în limbaj natural, ele trebuie să respecte sintaxa impusă de standardul Gherkin \footnote{Mai multe informații și specificația completă a limbajului pot fi găsite la adresa \url{https://cucumber.io/docs/gherkin/}}, care asigură structurarea corectă a scenariilor de test. În cardul articolului am prezentat un exemplu de scenariu de test pe care îl vom reproduce mai jos în secvența cu numărul \ref{exemplu_bdd}. Acest scenariu este declanșat de regulile de automatizare din aplicația \textit{hub} și vizează setarea corespunzătoare e luminozității \textit{smart TV}-ului în funcție de datele colectate de senzorul de luminozitate al ferestrei. Testul va fi executat de \textit{framework}-ul Behave pentru toate valorile din tabelul de exemple.
+Pentru descrierea și automatizarea testelor am utilizat biblioteca Python Behave \footnote{Documentația și codul sursă pot fi găsite la adresa \url{https://behave.readthedocs.io/en/stable/}.} care permite formularea scenariilor de test în limbaj natural și le asociază cu testele automate scrise în limbajul Python. Deși scenariile sunt descrise în limbaj natural, ele trebuie să respecte sintaxa impusă de standardul Gherkin \footnote{Mai multe informații și specificația completă a limbajului pot fi găsite la adresa \url{https://cucumber.io/docs/gherkin/}.}, care asigură structurarea corectă a scenariilor de test. În cardul articolului am prezentat un exemplu de scenariu de test pe care îl vom reproduce mai jos în fragmentul cu numărul \ref{exemplu_bdd}. Acest scenariu este declanșat de regulile de automatizare din aplicația \textit{hub} și vizează setarea corespunzătoare luminozității \textit{smart TV}-ului în funcție de datele colectate de senzorul de luminozitate al ferestrei. Testul va fi executat de \textit{framework}-ul Behave pentru toate valorile din tabelul de exemple.
 
 \begin{lstlisting}[caption={Exemplu de scenariu de test BDD pentru aplicațiile din suită}, label={exemplu_bdd}]
 (*\textbf{Feature:}*) TV auto-brightness
@@ -60,7 +55,7 @@ Pentru descrierea și automatizarea testelor am utilizat biblioteca Python Behav
 
 Pentru a adăuga un nou test în cadrul suitei de aplicații este nevoie de formularea lui în limbaj natural urmând constrângerile impuse de sintaxa Gherkin, iar apoi realizarea testului automat în limbajul Python. Un exemplu de astfel de test se poate regăsi în fragmentul cu numărul \ref{exemplu_python_behave}. Pasul \textit{given} creează contextul propice testării, anume setează senzorii la valorile dorite. Pasul \textit{when} declanșează regulile de automatizare din interiorul aplicației \textit{hub}, iar apoi pasul \textit{then} va verifica dacă valoarea luminozității colectată de la \textit{smart TV} corespunde cu rezultatul așteptat.
 
-\begin{lstlisting}[caption={Exemplu test automat folosind biblioteca Behave}, label={exemplu_python_behave}, language={Python}]
+\begin{lstlisting}[caption={Exemplu de test automat folosind biblioteca Behave}, label={exemplu_python_behave}, language={Python}]
 
 from behave import *
 import app
@@ -99,13 +94,11 @@ def step_impl(context, Y, Z):
 
 Concluzionăm că acest tip de testare este potrivit atât testării individuale a aplicațiilor, cât și a acestora după integrare, însă această tehnică este mai degrabă aplicabilă în procesul de dezvoltare pentru testarea scenariilor pozitive, decât pentru descoperirea de defecte neobișnuite. Automatizarea generării de scenarii de test variate și reducerea dependenței față de factorul uman pot reprezenta două direcții interesante de cercetare ce ar ajuta la îmbunătățirea tehnicii.
 
-\subsection{PatrIoT Framework}
-
-% TODO: !!! trebuie sa fac eu experimentele cu PatrIoT si sa compar
+% \subsection{PatrIoT Framework} Nu mai fac, am facut destul
 
 \section{Testarea exploratorie folosind \emph{fuzzing}}
 
-Testarea exploratorie își propune găsirea de stări marginale și excepționale ale unui sistem pentru a descoperi un număr cât mai mare de defecte. Acest tip de testare nu se concentrează în general pe scenariile pozitive, ci pe cele negative în care datele de intrare sunt de multe ori invalide parțial sau total.
+Testarea exploratorie își propune găsirea de stări marginale ale unui sistem pentru a descoperi un număr cât mai mare de defecte. Acest tip de testare nu se concentrează în general pe scenariile pozitive, ci pe cele negative în care datele de intrare sunt de multe ori invalide parțial sau total.
 
 În paragrafele următoare ne vom concentra pe o tehnică anume de testare exploratorie și anume \textit{fuzzing}-ul. Așa cum ne explică \citet{Manes2021}, \textit{fuzzing}-ul este o tehnică larg răspândită care presupune trimiterea de date de intrare malformate semantic sau sintactic spre un sistem software și monitorizarea reacției acestuia. 
 
@@ -120,7 +113,7 @@ while (*$t_{elapsed}$*) < (*$t_{limit}$*):
     TestCase (*$\leftarrow$*) Generate(Configuration)
     NewBugs, ExecInfo (*$\leftarrow$*) Evaluate(Configuration, TestCase)
     Configuration (*$\leftarrow$*) Update(Configuration, ExecInfo)
-    Bugs (*$\leftarrow$*) Bugs (*$\bigcup$*) NewBugs)
+    Bugs (*$\leftarrow$*) Bugs (*$\bigcup$*) NewBugs
     
 return Bugs
 \end{lstlisting}
@@ -137,24 +130,23 @@ Un aspect foarte important al \textit{fuzzer}-elor este modul în care genereaz�
 
 Pentru detectarea defectelor este nevoie de un așa numit \textit{oracol}. Acesta este un mecanism care permite evaluarea stării sistemului țintă și poate raporta anumite tipuri de defecte. De exemplu, sistemul de operare va semnala un acces invalid de memorie, astfel un algoritm de \textit{fuzzing} poate lua la cunoștință că a descoperit un defect.
 
-În paragrafele următoare vom analiza rezultatele a două \textit{fuzzer}-e ... TODO: de continuat aici
-
-% TODO: de explicat ce inseamna testare exploratorie
-% TODO: teorie fuzzing scurta, de gasit un paper de citat
-
 \subsection{RESTler}
 
-TODO: astept sa vad ce mai face rares cu fuzzing-ul
+RESTler este un \textit{grey-box stateful fuzzer} \footnote{Spre deosebire de \textit{fuzzer}-ele obișnuite, cele \textit{stateful} rețin informații despre starea sistemului țintă și relațiile dintre mai multe date de intrare separate. De exemplu, un \textit{stateful fuzzer} pentru protocolul \acrshort{http} ar trebui să poată înțelege relația dintre o cerere de tip \textit{DELETE} urmată de una de tip \textit{GET}.} specializat în REST \acrshort{api}s create peste protocolul \acrshort{http}. Acest \textit{fuzzer} este prezentat în articolul publicat de \citet{Atlidakis2019}. Autorii ne spun că RESTler are două metode prin care își ghidează generarea de date de test:
 
-\citet{Godefroid2020}
+\begin{itemize}
+    \item prin inferențe bazate pe specificația sistemului țintă, acesta deduce relațiile de tip producător-consumator dintre cereri (de exemplu, „cererea B va fi făcută doar după cererea A, deoarece A creează o resursă \textit{x} necesară pentru cererea B”)
+    \item prin analizarea \textit{feedback}-ului primit de la sistemul țintă pentru a determina ordinea corectă a cererilor (de exemplu, „cerea C este refuzată dacă nu este efectuată strict după lanț de cereri A,B”)
+\end{itemize}
 
-% TODO: de citat paper-ul de la restler si de folosit balariile din paper-ul de fuzzing de la SASHA
+\textit{RESTler} detectează defectele folosind un oracol personalizat, compus din mai multe criterii de detectare: codul de stare al răspunsului la cerere (de exemplu, codul 500 reprezintă o eroare), timpul mare de răspuns la cerere (sau lipsa lui totală) și o serie de reguli legate de relațiile dintre cereri și răspunsuri (de exemplu, dacă a fost inițiată o cerere de tip \textit{DELETE /resource/x}, orice cerere de tip \textit{GET /resource/x} ar trebui să întoarcă codul \textit{404 Not Found}, altfel putem considera că am descoperit un defect). Mai multe detalii despre algoritmii utilizați pot fi găsite în articolul menționat anterior, figura 3 conținând și pseudocodul acestora.
 
-% TODO: de vazut ce mai zice rares si ce experimente mai face el
+Am ales utliziarea \textit{RESTler}, deoarce toate aplicațiile din suită au deja specificații OpenAPI pentru descrierea rutelor \acrshort{http}, aceasta fiind specificația utilizată și de \textit{fuzzer}. În urma rulării, am observat că \textit{fuzzer}-ul poate detecta majoritatea defectelor a căror efect este nefuncționarea completă a aplicației sau întoarcerea unui răspuns de tip \textit{500 Internal Server Error}. Deoarece \acrshort{api}-urile aplicațiilor sunt relativ mici, RESTler parcurge majoritatea stărilor posibile în doar câteva minute. Pentru o explorare mai cuprinzătoare, ar fi necesară îmbunătățirea specificațiilor și a dicționarelor de valori utilizate de RESTler, însă acești pași sunt în afara scopului lucrării.
 
-\subsection{FirmAFL}
+În comparație cu tehnica anterioară, componenta exploratorie a \textit{fuzzing}-ului îmbunătățește considerabil raportul dintre efort și numărul de defecte descoperite. Pe de altă parte, \textit{RESTler} nu este specializat pentru sistemele \acrshort{iot} și nu este capabil să testeze mai multe aplicații simultan decât dacă acestea sunt încapsulate sub un REST \acrshort{api} unificat.
 
-% TODO: trebuie sa mai gasesc macar un fuzzer pe care sa-l rulez pe dataset ca sa am ce compara
+% \subsection{FirmAFL}
+% Am renuntat la asta, nu e mai e nici timp, nici chef, nici nu se preteaza. N-are rost sa mint.
 
 \section{Analiză statică}
 
@@ -170,7 +162,7 @@ Analiza statică presupune în general mecanisme de recunoaștere și deducție 
 
 Această tehnică de analiză nu depinde de date de intrare concrete pentru aplicație și nici nu necesită analizarea întregului program pentru a putea oferi concluzii pertinente. Pe de altă parte însă, aceste caracteristici cauzează o rată mare a fals-pozitivelor și o imposibilitate a verificării corectitudinii funcționale. Astfel este o tehnică utilă pentru detectarea defectelor, însă nu suficient de comprehensivă pentru a fi singura tehnică utilizată.
 
-În următoarele paragrafe vom prezenta evaluarea a trei unelte software pentru analizarea statică a programelor, două dintre ele fiind orientate pe analiza codului \textit{C/C++}, iar cea de a treia analizează aplicații care nu au codul sursă disponibil. În secțiunea următoare ne vom concentra pe un tip aparte de analiză statica, și anume analiza formală.
+În următoarele paragrafe vom prezenta evaluarea a două unelte software pentru analizarea statică a programelor, ambele specializate pe limbajele \textit{C} și \textit{C++}.
 
 \subsection{cppcheck}
 
@@ -178,7 +170,7 @@ Această tehnică de analiză nu depinde de date de intrare concrete pentru apli
 
 Am utilizat \textit{cppcheck} pentru a analiza toate cele cinci aplicații C++ din suită fără a fi nevoie de configurări suplimentare. Procesul de detectare al potențialelor probleme este în totalitate automat, însă pentru stabilirea sigură a existenței unui defect și reproducerea acestuia este nevoie de intervenția manuală a unui expert.
 
-Utilitarul a reușit să identifice cu succes două dintre defectele prezente în aplicații, acestea fiind foarte comune conform \acrfull{cwe}. În fragmentul \ref{defecte_cppcheck}, putem observa mesajele care semnalează dereferențierea unui pointer nul și dubla dealocare de memorie. 
+Utilitarul a reușit să identifice cu succes două dintre defectele prezente în aplicații, acestea fiind foarte comune conform \acrfull{cwe}. În fragmentul \ref{defecte_cppcheck}, putem observa mesajele care semnalează dereferențierea unui pointer nul și dubla eliberare a memorie. 
 
 \begin{lstlisting}[caption={Cele două defecte detectate de \textit{cppcheck}}, label={defecte_cppcheck}]
 windwow/Window.cpp:120:33: warning: Possible null pointer dereference: p [nullPointer]
@@ -208,7 +200,7 @@ weggli --cpp '{
 }' ./apps/
 \end{lstlisting}
 
-Un alt exemplu poate fi observat în \ref{weggli_json}, unde am dorit să găsim toate accesările de chei \acrshort{json} fără verificare corespunzătoare.
+Un alt exemplu poate fi observat în \ref{weggli_json}, unde am dorit să găsim toate accesările de chei \acrshort{json} pentru care nu s-a verificat existența.
 
 \begin{lstlisting}[label={weggli_json}, caption={Interogare weggli pentru a găsi accesarea de chei JSON fără verificare}]
 weggli --cpp '{ 
@@ -224,11 +216,104 @@ weggli --cpp '{
 
 %\textit{cwe\_checker} \footnote{Codul sursă al aplicației \textit{cwe\_checker} poate fi găsit la \url{https://github.com/fkie-cad/cwe_checker}.}
 
-%TODO: tre sa compilez aplicatiile si sa rulez asta, dar ma mai gandesc, poate il scot de tot ca s-ar putea sa fie suficient ce am deja
+\section{Verificare formală}
 
-\section{Analiză cu modelare formală}
+Prin verificare formală înțelegem practica de a demonstra sau a infirma corectitudinea funcționării unui sistem luând în calcul un set de proprietăți dorite. Această practică necesită transpunerea în limbaj matematic a algoritmilor și proprietăților sistemului țintă. O abordare foarte populară în verificarea formală este verificarea modelului (en. \textit{model checking}) folosind programe de calculator cunoscute ca \acrfull{atps}, adică programe care pot demonstra automat teoreme. O clasă particulară a acestui tip de programe este reprezentată de cele care rezolvă \acrfull{smt}, pe care le-am menționat în capitolele anterioare. În rândurile următoare ne vom concentra asupra tehnicii \textit{model checking} și o vom exemplifica folosind logica temporală și limbajul \textit{TLA+}.
 
-TODO: asta e cam complicată, o s-o las la urmă, poate reușesc ca demonstrez măcar un bug așa
+Așa cum ne spun \citet{Markus1999}, \textit{model checking} este o procedură care determină dacă un model abstract $M$ al unui sistem țintă satisface o formulă logică $\phi$, adică $M \models \phi$. Modelul abstract este în general are o structură similară cu cea a unui automat finit (ie. conține stări și tranziții), iar $\phi$ este un set de proprietăți exprimate folosind logică temporală.
 
-% TODO: de gasit un paper despre analiza formala si modelare
-% TODO: de reprodus macar un bug folosind modelarea formala si un solver gen Z3 sau un theorem prover
+Vom privi un exemplu practic de modelare a unui sistem simplu pentru o mai bună înțelegere. Să ne reamintim exemplul oferit de \citet{Zhou2021} pentru un defect de tip \textit{race condition}:
+
+\say{{[}...{]} For example, <<When motion is detected, turn on the switch>> and <<Every day at midnight, turn off the switch>> will conflict if motion is detected at 12 pm. {[}...{]}}
+
+Putem defini starea sistemului luând în considerare trei parametri: starea întrerupătorului becului (oprit/pornit), starea senzorului de mișcare (detectează mișcare sau nu detectează mișcare) și timpul curent. Așa cum ne sugerează \citet{Lamport2005}, pentru reprezentarea timpului vom folosi o variabilă numerică, cu valori în $\mathbb{N}^*$. În ecuațiile următoare, vom folosi notații din logica temporală de tip \textit{modal $\mu$-calculus}, care este o extindere a logicii Hennessy-Milner, construită peste o structură Kripke. Pentru o descriere detaliată a structurilor și notațiilor utilizate, poate fi consultat articolul publicat de \citet{Markus1999}.
+
+Setul de variabile care descriu starea sistemului poate fi reprezentat astfel:
+
+\begin{gather*}
+    Vars \triangleq <light\_state, motion\_state, now> \text{, unde } \\
+        light\_state \in LightStates = \{\text{„on”}, \text{„off”}\} \\
+        motion\_state \in MotionStates = \{\text{„detected”}, \text{„not detected”}\} \\
+        now \in \mathbb{N}^*
+\end{gather*}
+
+Starea inițială a sistemului fiind următoarea:
+
+\begin{align*}
+    Init \triangleq &\wedge light\_state = \text{„off”} \\
+                   &\wedge motion\_state = \text{„not detected”} \\
+                   &\wedge now = 1
+\end{align*}
+
+Să definim acum pe rând acțiunile care determină tranzițiile stărilor. Vom nota cu $x'$ starea viitoare a variabilei $x$, iar pentru a menține notația scurtă, $x' = x$ va fi $x_u$. Cea mai simplă este cea care determină trecerea timpului:
+
+\begin{align*}
+    clock \triangleq &\wedge now' = now + 1 \wedge light\_state_u \wedge motion\_state_u
+\end{align*}
+
+Apoi, acțiunea indusă de „When motion is detected, turn on the switch”, poate fi descrisă astfel:
+
+\begin{align*}
+    motion\_sensor \triangleq &\wedge \exists s \in MotionStates : (
+        \wedge motion\_state' = s \wedge f_{motion}(s)
+    ) \wedge now_u
+\end{align*}
+
+Unde $f_{motion}$ este definită astfel:
+\begin{gather*}
+    f_{motion}(x) = \left\{
+        \begin{array}{ll}
+              light\_state' = \text{„on”}, & \text{dacă } x = \text{„detected”} \\
+              light\_state_u, & \text{altfel} \\
+        \end{array} 
+        \right. 
+\end{gather*}
+
+În final, acțiunea care descrie „Every day at midnight, turn off the switch” este următoarea:
+
+\begin{align*}
+    light\_timer \triangleq \wedge f_{time}(now) \wedge motion\_state_u \wedge now_u
+\end{align*}
+
+Unde $f_{time}$ este definită astfel (NB. nu suntem interesați de definiția concretă a funcției $IsMidnight$):
+
+\begin{align*}
+    f_{time}(x) = \left\{
+        \begin{array}{ll}
+              light\_state' = \text{„off”}, & \text{dacă } IsMidnight(x) = true \\
+              light\_state_u, & \text{altfel} \\
+        \end{array} 
+        \right. 
+\end{align*}
+
+Putem acum să definim acțiunea $Next$ care denotă o tranziție ramificată folosind oricare din acțiunile definite anterior:
+
+\begin{align*}
+    Next \triangleq \vee clock \vee motion\_sensor \vee light\_timer
+\end{align*}
+
+Proprietatea principală pe care vrem să o respecte sistemul definit este următoarea: „Dacă este detectată mișcare, becul este aprins.”, enunțată formal:
+
+\begin{align*}
+    MotionLightValid \triangleq (motion\_state = \text{„detected”}) \Rightarrow (light\_state = \text{„on”})
+\end{align*}
+
+În final, putem defini specificația completă a sistemului:
+
+\begin{align*}
+    Spec \triangleq Init \wedge {[}Next{]}_{Vars \wedge MotionLightValid}
+\end{align*}
+
+Se poate observa ușor (fără a utiliza un computer) că dacă avem condițiile următoare:
+\begin{gather*}
+    motion\_sensor = \text{„detected”} \wedge IsMidnight(now) = true
+\end{gather*}
+, formula $MotionLightValid$ nu va fi satisfăcută, astfel fiind evidențiat un defect în proiectarea sistemului.
+
+Dacă am considera însă un sistem complex, evaluarea manuală a tuturor stărilor modelului nu este fezabilă. Pentru verificarea automată a modelului putem folosi limbajele \textit{TLA+} și \textit{PlusCal} proiectate de Laslie Lamport împreună cu software-ul de verificare automată \textit{TLC}. 
+
+\textit{TLA+} permite modelarea unui sistem folosind o sintaxă apropiată de cea matematică, iar \textit{PlusCal} este un limbaj cu sintaxă imperativă ce permite descrierea algoritmilor, aceștia fiind traduși într-o specificație \textit{TLA+} pentru a fi verificați automat. O descriere amănunțită a limbajului poate fi consultată în articolul lui \fullcite{Lamport1994}. În anexa \ref{apx:cod}, fragmentul de cod \ref{lst:tla_exemplu}, se găsește specificația completă a sistemului descris anterior.
+
+Aplicând această tehnică de testare pe suita de aplicații construită în cadrul lucrării, putem identifica doar defectele la nivel de persistență în sistem, deoarece este evaluat doar modelul sistemului, nu și implementarea sa. În scenariile simple (cum ar fi cel al unei locuințe inteligente), raportul dintre efort și beneficii nu este avantajos în cazul acestei tehnici de testare, însă putem specula că în cazul proiectării sistemelor complexe la scară mult mai mare (de exemplu un oraș inteligent), verificarea formală poate prevedea încă din timpul proiectării un număr larg de defecte foarte subtile.
+
+Încheiem prezentul capitol cu concluzia că suita de aplicații construită, în ciuda limitărilor sale, s-a dovedit utilă pentru evaluarea tehnicilor de testare abordate. În tabelul \ref{tab:sumar_testare} din anexa \ref{apx:ilustratii}, avem un sumar comparativ al caracteristicilor observate pentru fiecare tehnică de testare cu care am desfășurat experimente. 
