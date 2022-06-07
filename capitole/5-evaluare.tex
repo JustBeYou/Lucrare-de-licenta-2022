@@ -19,7 +19,7 @@ Am explicat în capitolul al doilea, secțiunea 2.1.2, ce este testarea funcțio
 
 % Vom compara o abordare proprie inspirată de principiile metodologiei \acrfull{bdd}, metodologie despre care vom vorbi pe larg mai jos, și un \textit{framework} experimental realizat de \citet{Bures2021} pentru testarea de integrare și interoperabilitate a sistemelor \acrshort{iot}. N-am mai comparat
 
-\subsection{Metodologia Behaviour-Driven Development}
+\subsection*{Metodologia Behaviour-Driven Development}
 \label{cap:testare_bdd}
 
 \acrfull{bdd} este o metodologie de dezvoltare succesoare a \acrfull{tdd} care se preocupă de crearea de specificații clare și automatizabile pentru testarea sistemului țintă. Pentru a atinge acest scop, \acrshort{bdd} propune o terminologie standardizată pentru proiectarea cazurilor de test pentru a ușura formularea lor atunci când mai multe părți sunt implicate (\textit{stakeholders}), cum ar fi dezvoltatori, clienți sau personalul de vânzări. Vom prezenta pe scurt această metodologie bazându-ne pe studiul realizat de \citet{Solis2011} despre caracteristicile \acrshort{bdd}.
@@ -94,7 +94,7 @@ def step_impl(context, Y, Z):
 
 Concluzionăm că acest tip de testare este potrivit atât testării individuale a aplicațiilor, cât și a acestora după integrare, însă această tehnică este mai degrabă aplicabilă în procesul de dezvoltare pentru testarea scenariilor pozitive, decât pentru descoperirea de defecte neobișnuite. Automatizarea generării de scenarii de test variate și reducerea dependenței față de factorul uman pot reprezenta două direcții interesante de cercetare ce ar ajuta la îmbunătățirea tehnicii.
 
-% \subsection{PatrIoT Framework} Nu mai fac, am facut destul
+% \subsection*{PatrIoT Framework} Nu mai fac, am facut destul
 
 \section{Testarea exploratorie folosind \emph{fuzzing}}
 
@@ -130,7 +130,7 @@ Un aspect foarte important al \textit{fuzzer}-elor este modul în care genereaz�
 
 Pentru detectarea defectelor este nevoie de un așa numit \textit{oracol}. Acesta este un mecanism care permite evaluarea stării sistemului țintă și poate raporta anumite tipuri de defecte. De exemplu, sistemul de operare va semnala un acces invalid de memorie, astfel un algoritm de \textit{fuzzing} poate lua la cunoștință că a descoperit un defect.
 
-\subsection{RESTler}
+\subsection*{RESTler}
 
 RESTler este un \textit{grey-box stateful fuzzer} \footnote{Spre deosebire de \textit{fuzzer}-ele obișnuite, cele \textit{stateful} rețin informații despre starea sistemului țintă și relațiile dintre mai multe date de intrare separate. De exemplu, un \textit{stateful fuzzer} pentru protocolul \acrshort{http} ar trebui să poată înțelege relația dintre o cerere de tip \textit{DELETE} urmată de una de tip \textit{GET}.} specializat în REST \acrshort{api}s create peste protocolul \acrshort{http}. Acest \textit{fuzzer} este prezentat în articolul publicat de \citet{Atlidakis2019}. Autorii ne spun că RESTler are două metode prin care își ghidează generarea de date de test:
 
@@ -145,7 +145,7 @@ Am ales utliziarea \textit{RESTler}, deoarce toate aplicațiile din suită au de
 
 În comparație cu tehnica anterioară, componenta exploratorie a \textit{fuzzing}-ului îmbunătățește considerabil raportul dintre efort și numărul de defecte descoperite. Pe de altă parte, \textit{RESTler} nu este specializat pentru sistemele \acrshort{iot} și nu este capabil să testeze mai multe aplicații simultan decât dacă acestea sunt încapsulate sub un REST \acrshort{api} unificat.
 
-% \subsection{FirmAFL}
+% \subsection*{FirmAFL}
 % Am renuntat la asta, nu e mai e nici timp, nici chef, nici nu se preteaza. N-are rost sa mint.
 
 \section{Analiză statică}
@@ -164,7 +164,7 @@ Această tehnică de analiză nu depinde de date de intrare concrete pentru apli
 
 În următoarele paragrafe vom prezenta evaluarea a două unelte software pentru analizarea statică a programelor, ambele specializate pe limbajele \textit{C} și \textit{C++}.
 
-\subsection{cppcheck}
+\subsection*{cppcheck}
 
 \textit{cppcheck} \footnote{Documentația și codul sursă al aplicației pot fi găsite la \url{https://cppcheck.sourceforge.io/}.} este un analizator static specializat pentru limbajele C și C++. Acesta urmărește detectarea de greșeli comune în programare și se concentrează în special pe acele greșeli care pot cauza comportamente nedefinite sau sunt periculoase. Acest analizator promite o rată mică a fals pozitivelor.
 
@@ -185,7 +185,7 @@ windwow/WindowEndpoint.cpp:257:21: note: Uninitialized variable: setResponse
 
 Observăm ca \textit{cppcheck} este potrivit doar pentru analizarea unor greșeli comune și relativ simple de programare, acesta fiind exclusiv pentru limbajele C și C++. Analizatorul nu poate fi utilizat pentru testarea interacțiunilor dintre aplicații și nici pentru descoperirea de defecte cauzate de tranziții de stare complexe. Deși este rapid și nu necesită configurări, aria de aplicabilitate a acestei unelte rămâne destul de restrânsă.
 
-\subsection{weggli}
+\subsection*{weggli}
 
 \textit{weggli} \footnote{Codul sursă al aplicației poate fi găsit la \url{https://github.com/googleprojectzero/weggli}.} este un utilitar pentru căutări cu înțelegere semantică în interiorul codului sursă al programelor C și C++. Deși nu necesită configurări suplimentare, acest utilitar nu vine cu o serie de reguli de analiză standard, această sarcină rămânând în grija expertului care îl folosește.
 
@@ -212,7 +212,7 @@ weggli --cpp '{
 
 \textit{weggli} poate detecta majoritatea defectelor prezente în suită care sunt legate de un construct de cod C++. Dezavantajele acestei abordări sunt însă reprezentate de faptul că este nevoie de interacțiune umană pentru a formula interogările, majoritatea putând rezulta în niciun defect găsit, dar și faptul că nu se pot detecta defecte de integrare sau logică mai complexă.
 
-%\subsection{cwe\_checker} 
+%\subsection*{cwe\_checker} 
 
 %\textit{cwe\_checker} \footnote{Codul sursă al aplicației \textit{cwe\_checker} poate fi găsit la \url{https://github.com/fkie-cad/cwe_checker}.}
 
