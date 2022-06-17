@@ -5,11 +5,11 @@ După cum am argumentat în capitolele precedente, sistemele \acrshort{iot} sunt
 
 Regăsim aceeași concluzie enunțată de \citet{Paduraru2021}, în articolul lor, care propune o specificație formală pentru descrierea sistemelor \acrshort{iot}. Pentru evaluarea riguroasă a specificației propuse este nevoie de construirea unei suite de aplicații cât mai apropiate de realitate. Această inițiativă este materializată și prezentată de lucrarea lui \citet{Cristea2022}. Aceasta va fi prezentată în paginile ce urmează, evidențiind contribuțiile proprii.
 
-Un aspect important al suitei de aplicații construit este faptul că este \textit{open-source}. Într-o industrie în care majoritatea producătorilor nu pun la dispoziție decât sursele deja compilate ale \textit{firmware}-ului, iar în multe cazuri acestea se află pe dispozitive ce nu permit accesarea lui, existența \textit{software}-ului \textit{open-source} este crucială pentru a crea un mediu transparent pentru experimente.
+Un aspect important a suitei de aplicații construit este faptul că este \textit{open-source}. Într-o industrie în care majoritatea producătorilor nu pun la dispoziție decât sursele deja compilate ale \textit{firmware}-ului, iar în multe cazuri acestea se află pe dispozitive ce nu permit accesarea lui, existența \textit{software}-ului \textit{open-source} este crucială pentru a crea un mediu transparent pentru experimente.
 
 O observație importantă este că suita de aplicații este realizată în mare măsură imitând aplicațiile reale dintr-o locuință inteligentă, deoarece este unul din cele mai întâlnite scenarii de utilizare a tehnologiilor \acrshort{iot}, și pentru că oferă un grad de complexitate și interconectare suficient de mic încât să fie realizat fără eforturi majore, dar și suficient de mare, încât să mimeze comportamentul unui sistem real, aducând același tip de provocări.
 
-În prezentul capitol, vom discuta despre modul de construire al suitei de aplicații și particularitățile fiecărei aplicații în parte, prezentând funcționalitatea și tehnologiile utilizate pentru realizarea ei. Apoi, ne vom concentra asupra infrastructurii de interconectare a aplicațiilor și vom discuta despre protocoalele utilizate și motivația alegerii lor. Pentru a ilustra o situație cât mai apropiată de realitate, aplicațiile sunt angrenate în fluxuri de automatizări orchestrate de o unitate centrală, analiza acestor fluxuri fiind de asemenea prezentă în acest capitol. După înțelegerea structurală a setului de aplicații, vom vedeam cum îl putem folosi pentru compararea și analizarea tehnicilor de testare și cum poate fi acesta util pentru cercetători sau profesioniști. În final, ne vom concentra asupra limitărilor și posibilelor îmbunătățiri ce ar putea fi aduse în viitor setului de aplicații.
+În prezentul capitol, vom discuta despre modul de construire al suitei de aplicații și particularitățile fiecărei aplicații în parte, prezentând funcționalitatea și tehnologiile utilizate pentru realizarea ei. Apoi, ne vom concentra asupra infrastructurii de interconectare a aplicațiilor și vom discuta despre protocoalele utilizate și motivația alegerii lor. Pentru a ilustra o situație cât mai apropiată de realitate, aplicațiile sunt angrenate în fluxuri de automatizări orchestrate de o unitate centrală, analiza acestor fluxuri fiind de asemenea prezentă în acest capitol. După înțelegerea structurală a setului de aplicații, vom vedea cum îl putem folosi pentru compararea și analizarea tehnicilor de testare și cum poate fi acesta util pentru cercetători sau profesioniști. În final, ne vom concentra asupra limitărilor și posibilelor îmbunătățiri ce ar putea fi aduse în viitor setului de aplicații.
 
 \section{Descrierea aplicațiilor}
 
@@ -26,7 +26,7 @@ Pentru a ilustra cât mai bine o situație reală, aplicațiile utilizate au sur
 
 \textbf{În context}: Interacționează cu aplicația WindWow în legătură cu aspecte precum temperatura sau luminozitatea.
 
-\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2020.
+\textbf{Sursă}: Echipă de studenți înscriși la cursul de Ingineria Programării, anul 2020.
 % =====================================================================
 
 % =====================================================================
@@ -38,7 +38,7 @@ Pentru a ilustra cât mai bine o situație reală, aplicațiile utilizate au sur
 
 \textbf{În context}: Senzorii de luminozitate și temperatură colectează date relevante pentru o multitudine de alte dispozitive din rețea, cum ar fi SmartFlower și SmartTV, care își pot calibra funcționarea în funcție de datele primite.
 
-\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2020.
+\textbf{Sursă}: Echipă de studenți înscriși la cursul de Ingineria Programării, anul 2020.
 % =====================================================================
 
 % =====================================================================
@@ -50,7 +50,7 @@ Pentru a ilustra cât mai bine o situație reală, aplicațiile utilizate au sur
 
 \textbf{În context}: Dispozitivul este relativ izolat, interacționează minimal, doar cu SmartKettle.
 
-\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2020.
+\textbf{Sursă}: Echipă de studenți înscriși la cursul de Ingineria Programării, anul 2020.
 % =====================================================================
 
 % =====================================================================
@@ -62,7 +62,7 @@ Pentru a ilustra cât mai bine o situație reală, aplicațiile utilizate au sur
 
 \textbf{În context}: Preia date legate de temperatură de la WindWow pentru a determina temperatura de preparare a băuturilor.
 
-\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2020.
+\textbf{Sursă}: Echipă de studenți înscriși la cursul de Ingineria Programării, anul 2020.
 % =====================================================================
 
 % =====================================================================
@@ -74,7 +74,7 @@ Pentru a ilustra cât mai bine o situație reală, aplicațiile utilizate au sur
 
 \textbf{În context}: Își reglează luminozitatea conform datelor primite de la senzorii aplicației WindWow.
 
-\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2020.
+\textbf{Sursă}: Echipă de studenți înscriși la cursul de Ingineria Programării, anul 2020.
 % =====================================================================
 
 % =====================================================================
@@ -84,7 +84,7 @@ Pentru a ilustra cât mai bine o situație reală, aplicațiile utilizate au sur
 
 \textbf{Tehnologii utilizate}: \textit{Python 3.7}, \textit{Flask} pentru \textit{server}-ul \acrshort{http}, \textit{PyYAML}, \textit{Mosquitto} și \textit{SQLite}.
 
-\textbf{Sursă}: Echipă de Studenți înscriși la cursul de Ingineria Programării, anul 2021.
+\textbf{Sursă}: Echipă de studenți înscriși la cursul de Ingineria Programării, anul 2021.
 % =====================================================================
 
 % =====================================================================

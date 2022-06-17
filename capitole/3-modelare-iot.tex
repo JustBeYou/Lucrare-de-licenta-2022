@@ -28,7 +28,7 @@ Un alt exemplu poate fi reprezentat de o linie de producție, industrială compl
         \label{fig:exemplu_iiot}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
-        \caption{Arhitectura \textit{3-layer}}
+        \caption{Arhitectura \textit{3-layer} \\ (ilustrație adaptată după figura 1 din articolul \citetitle{Yousuf2015})}
         \centering
         \includegraphics[width=0.9\textwidth]{images/3_layer.drawio.png}
         \label{fig:arch_3layer}
@@ -81,7 +81,7 @@ O altă perspectivă asupra unui posibil tip de \acrshort{soa} vine din partea l
 
 \section{Protocoale de comunicație}
 
-În discuția anterioară despre arhitectura sistemelor, \acrshort{iot} am observat că un rol important este jucat de mecanismele de comunicare. Aceste sisteme sunt nevoite să coordoneze un număr mare de dispozitive și să transmită cantități enorme de date într-un mod fiabil, rapid și rezilient. De aceea sunt utilizate o gamă largă de protocoale de comunicație, fiecare cu avantajele și dezavantajele sale, în încercarea de a depăși provocările impuse de natura distribuită și eterogenă a sistemelor. În rândurile următoare, vor fi analizate o serie de protocoale utilizate în mod uzual. Vom trata protocoalele în ordine crescătoare, conform situării lor în modelul \acrshort{osi}. O ilustrație a acestui model se găsește în anexa \ref{apx:ilustratii}, figura \ref{fig:osi_model}.
+În discuția anterioară despre arhitectura sistemelor \acrshort{iot} am observat că un rol important este jucat de mecanismele de comunicare. Aceste sisteme sunt nevoite să coordoneze un număr mare de dispozitive și să transmită cantități enorme de date într-un mod fiabil, rapid și rezilient. De aceea sunt utilizate o gamă largă de protocoale de comunicație, fiecare cu avantajele și dezavantajele sale, în încercarea de a depăși provocările impuse de natura distribuită și eterogenă a sistemelor. În rândurile următoare, vor fi analizate o serie de protocoale utilizate în mod uzual. Vom trata protocoalele în ordine crescătoare, conform situării lor în modelul \acrshort{osi}. O ilustrație a acestui model se găsește în anexa \ref{apx:ilustratii}, figura \ref{fig:osi_model}.
 
 Deoarece majoritatea comunicațiilor se desfășoară în mod \textit{wireless}, un protocol foarte popular pentru nivelul fizic și \textit{data link} este \textit{IEEE 802.15.4}. Așa cum ne spun \citet{Lin2017}, \textit{IEEE 802.15.4} este un protocol pentru comunicații cu consum scăzut de energie și rată mică de transfer. Datorită versatilității lui, acest protocol reprezintă baza pentru alte protocoale de nivel mai înalt precum \textit{ZigBee}, \textit{6LoWPAN} sau \textit{WirelessHART}, despre care vom vorbi în rândurile următoare.
 
@@ -122,10 +122,10 @@ Vom folosi ca fundație specificația propusă de \citet{Paduraru2021}, deoarece
         \end{gather*}
     \item orice vârf $v \in V$ este caracterizat de un \textit{buffer} de \textit{input} și unul de \textit{output}, aceștia fiind descriși de relația între producător și consumator, astfel încât: 
         \begin{gather*}
-            Buffer_{in}(v) = \bigcup_{v_{in} \in V_{in}(v)} Buffer_{out}(v_{in}) \\
-            Buffer_{out}(v) = \bigcup_{v_{out} \in V_{out}(v)} Buffer_{in}(v_{out})
+            \mathrm{Buffer}_{in}(v) = \bigcup_{v_{in} \in V_{in}(v)} \mathrm{Buffer}_{out}(v_{in}) \\
+            \mathrm{Buffer}_{out}(v) = \bigcup_{v_{out} \in V_{out}(v)} \mathrm{Buffer}_{in}(v_{out})
         \end{gather*}
-    \item graful $G$ este dinamic, vârfuri și muchii putând fii adăugate sau eliminate în timpul funcționării rețelei.
+    \item graful $G$ este dinamic, vârfuri și muchii putând fi adăugate sau eliminate în timpul funcționării rețelei.
 \end{enumerate}
 
 Un aspect important, discutat de autori, este că muchiile rețelei trebuie privite dintr-o perspectivă probabilistă, anume ele pot lipsi în timpul funcționării sistemului. De exemplu, un senzor ar putea fi deconectat, fără energie sau să comunice date la intervale foarte lungi de timp. O viziune mai clară asupra acestui aspect o putem avea privind figura \ref{fig:river_network}. În această figură, fluxurile de date ”curg” de la senzori spre nodurile de \textit{output} prin intermediul punctului central, \textit{hub}-ul rețelei. Observăm că unele muchii sau vârfuri din graf sunt obligatorii pentru funcționarea sistemului, eliminarea lor făcând imposibilă o execuție coerentă. Acest set de vârfuri și muchii obligatorii sunt notate $V_r$ și $E_r$ și determină graful funcțional minimal $G_r$. (ie. \textit{r} $\rightarrow$ \textit{required})
@@ -163,4 +163,4 @@ Descrierea propusă de \citet{Paduraru2021} se concentrează pe fluxurile fizice
 
 Într-o manieră similară celei de mai sus, putem descrie graful de fluxuri logice $G_L$ care conține aceleași vârfuri, însă nu și aceleași muchii. Deoarece abordarea este foarte similară, nu vom repeta notațiile propuse mai sus, dar vom analiza un scurt exemplu ilustrativ. Să presupunem că în figura \ref{fig:river_network} există o dependență logică între vârfurile $S_2$, $P_1$ și $O_2$. Atunci, în graful $G$ vor fi prezente muchiile: $S_2 F_2$, $F_2 C$, $C P_1$, $P_1 C$ și $C O_2$, deoarece datele nu pot urma alt drum fizic fără intermediarii $F_2$ și $C$. Pe de altă parte, în graful $G_L$ vor apărea doar muchiile determinate de drumul $S_2 P_1 O_2$, deoarece doar acestea iau parte la procesarea logică a fluxului de date.
 
-Concluzionăm că am atins primul obiectiv al lucrării, anume stabilirea unui cardu tehnologic, dar și teoretic pentru sistemele \acrshort{iot}. Vom continua în capitolul următor cu descrierea modului în care am construit o suită de aplicații \acrshort{iot}, care să ilustreze cât mai bine caracteristicile tratate. Această suită va fi utilizată în finalul lucrării pentru evaluarea câtorva tehnici de testare.
+Concluzionăm că am atins primul obiectiv al lucrării, anume stabilirea unui cadru tehnologic, dar și teoretic pentru sistemele \acrshort{iot}. Vom continua în capitolul următor cu descrierea modului în care am construit o suită de aplicații \acrshort{iot}, care să ilustreze cât mai bine caracteristicile tratate. Această suită va fi utilizată în finalul lucrării pentru evaluarea câtorva tehnici de testare.

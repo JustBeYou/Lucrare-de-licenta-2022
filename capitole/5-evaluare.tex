@@ -2,7 +2,7 @@
 
 Pentru a dovedi relevanța suitei de aplicații construită anterior, vom desfășura o serie de experimente folosind câteva tehnici și tehnologii de testare. Acestea fac parte din următoarele categorii: testare funcțională, testare exploratorie, analiză statică și verificare formală.
 
-În cardul analizei, ne vom concentra asupra următoarelor criterii de evaluare:
+În cadrul analizei, ne vom concentra asupra următoarelor criterii de evaluare:
 
 \begin{itemize}
     \item tehnica este automată sau manuală (sau parțial automată);
@@ -38,7 +38,7 @@ Această standardizare oferă posibilitatea transpunerii directe a scenariilor �
 
 În articolul realizat de \citet{Cristea2022}, am abordat testarea funcțională a suitei de aplicații propuse, folosind concepte inspirate din metodologia \acrshort{bdd}. Deoarece testarea unitară nu poate asigura funcționarea corectă a unui sistem atunci când mai multe componente sunt integrate împreună, testele funcționale au avut în vedere angrenarea mai multor aplicații din suită și verificarea fluxurilor de date, care circulă între ele. De asemenea, această metodă servește ca exemplu de bază pentru utilizarea și modul de funcționare al suitei de aplicații construite.
 
-Pentru descrierea și automatizarea testelor am utilizat biblioteca Python , \footnote{Documentația și codul sursă pot fi găsite la adresa \url{https://behave.readthedocs.io/en/stable/}.} care permite formularea scenariilor de test în limbaj natural și le asociază cu testele automate scrise în limbajul Python. Deși scenariile sunt descrise în limbaj natural, ele trebuie să respecte sintaxa impusă de standardul Gherkin \footnote{Mai multe informații și specificația completă a limbajului pot fi găsite la adresa \url{https://cucumber.io/docs/gherkin/}.}, care asigură structurarea corectă a scenariilor de test. În cardul articolului, am prezentat un exemplu de scenariu de test pe care îl vom reproduce mai jos în fragmentul cu numărul \ref{exemplu_bdd}. Acest scenariu este declanșat de regulile de automatizare din aplicația \textit{hub} și vizează setarea corespunzătoare luminozității \textit{smart TV}-ului în funcție de datele colectate de senzorul de luminozitate al ferestrei. Testul va fi executat de \textit{framework}-ul Behave, pentru toate valorile din tabelul de exemple.
+Pentru descrierea și automatizarea testelor am utilizat biblioteca Python Behave, \footnote{Documentația și codul sursă pot fi găsite la adresa \url{https://behave.readthedocs.io/en/stable/}.} care permite formularea scenariilor de test în limbaj natural și le asociază cu testele automate scrise în limbajul Python. Deși scenariile sunt descrise în limbaj natural, ele trebuie să respecte sintaxa impusă de standardul Gherkin \footnote{Mai multe informații și specificația completă a limbajului pot fi găsite la adresa \url{https://cucumber.io/docs/gherkin/}.}, care asigură structurarea corectă a scenariilor de test. În cardul articolului, am prezentat un exemplu de scenariu de test pe care îl vom reproduce mai jos în fragmentul cu numărul \ref{exemplu_bdd}. Acest scenariu este declanșat de regulile de automatizare din aplicația \textit{hub} și vizează setarea corespunzătoare luminozității \textit{smart TV}-ului în funcție de datele colectate de senzorul de luminozitate al ferestrei. Testul va fi executat de \textit{framework}-ul Behave, pentru toate valorile din tabelul de exemple.
 
 \begin{lstlisting}[caption={Exemplu de scenariu de test BDD pentru aplicațiile din suită}, label={exemplu_bdd}]
 (*\textbf{Feature:}*) TV auto-brightness
@@ -100,7 +100,7 @@ Concluzionăm că acest tip de testare este potrivit atât testării individuale
 
 Testarea exploratorie își propune găsirea de stări marginale ale unui sistem pentru a descoperi un număr cât mai mare de defecte. Acest tip de testare nu se concentrează în general pe scenariile pozitive, ci pe cele negative în care datele de intrare sunt de multe ori invalide parțial sau total.
 
-În paragrafele următoare, ne vom concentra pe o tehnică anume de testare exploratorie și anume \textit{fuzzing}-ul. Așa cum ne explică \citet{Manes2021}, \textit{fuzzing}-ul este o tehnică larg răspândită care presupune trimiterea de date de intrare malformate semantic sau sintactic spre un sistem software și monitorizarea reacției acestuia. 
+În paragrafele următoare, ne vom concentra pe o tehnică anume de testare exploratorie și anume \textit{fuzzing}-ul. Așa cum ne explică \citet{Manes2021}, \textit{fuzzing}-ul \footnote{O discuție amplă despre \textit{fuzzing} poate fi găsită în materialul realizat de \fullcite{fuzzingbook2021}.} este o tehnică larg răspândită care presupune trimiterea de date de intrare malformate semantic sau sintactic spre un sistem software și monitorizarea reacției acestuia. 
 
 În general, un algoritm de \textit{fuzzing} generează în mod aleator mutații pentru un set de date de intrare, apoi trimite datele de intrare la sistemul software țintă, iar în final evaluează starea rezultată și constată dacă au fost detectate defecte. Acești pași se pot desfășura la infinit sau într-un interval de timp stabilit. În fragmentul \ref{fuzzing_algo} este reprezentată în pseudocod structura generală a algoritmului descris, așa cum ne-o înfățișează \citet{Manes2021}.
 
@@ -152,7 +152,7 @@ Am ales utliziarea \textit{RESTler}, deoarce toate aplicațiile din suită au de
 
 Tehnicile anterioare evaluate pot fi toate considerate dinamice în natură, deoarece presupun executarea codului aplicațiilor și observarea comportamentului în timpul execuției. O altă abordare care necesită mai puține resurse computaționale și nu este preocupată de executarea aplicațiilor este analiza statică. 
 
-Analiza statică presupune mecanisme de recunoaștere și deducție a tiparelor problematice în codul sursă sau codul mașină al aplicațiilor. Așa cum ne spune analiza realizată de \citet{Gosain2015}, există mai multe tehnici de analizare statică:
+Analiza statică presupune mecanisme de recunoaștere și deducție a tiparelor problematice în codul sursă sau codul mașină al aplicațiilor. Așa cum ne spune analiza realizată de \citet{Gosain2015}, există mai multe tehnici de analiză statică:
 \begin{itemize}
     \item recunoașterea constructelor sintactice problematice;
     \item reprezentarea stărilor aplicației ca noduri într-un graf și analizarea fluxurilor de date;
@@ -231,40 +231,40 @@ Putem defini starea sistemului luând în considerare trei parametri: starea în
 Setul de variabile care descriu starea sistemului poate fi reprezentat astfel:
 
 \begin{gather*}
-    Vars \triangleq <light\_state, motion\_state, now> \text{, unde } \\
-        light\_state \in LightStates = \{\text{„on”}, \text{„off”}\} \\
-        motion\_state \in MotionStates = \{\text{„detected”}, \text{„not detected”}\} \\
-        now \in \mathbb{N}^*
+    \mathrm{Vars} \triangleq <\mathrm{light\_state}, \mathrm{motion\_state}, \mathrm{now}> \text{, unde } \\
+        \mathrm{light\_state} \in \mathrm{LightStates} = \{\text{„on”}, \text{„off”}\}, \\
+        \mathrm{motion\_state} \in \mathrm{MotionStates} = \{\text{„detected”}, \text{„not detected”}\}, \\
+        \mathrm{now} \in \mathbb{N}^*
 \end{gather*}
 
 Starea inițială a sistemului fiind următoarea:
 
 \begin{align*}
-    Init \triangleq &\wedge light\_state = \text{„off”} \\
-                   &\wedge motion\_state = \text{„not detected”} \\
-                   &\wedge now = 1
+    \mathrm{Init} \triangleq &\wedge \mathrm{light\_state} = \text{„off”} \\
+                   &\wedge \mathrm{motion\_state} = \text{„not detected”} \\
+                   &\wedge \mathrm{now} = 1
 \end{align*}
 
 Să definim, acum, pe rând acțiunile care determină tranzițiile stărilor. Vom nota cu $x'$ starea viitoare a variabilei $x$, iar pentru a menține notația scurtă, $x' = x$ va fi $x_u$. Cea mai simplă este cea care determină trecerea timpului:
 
 \begin{align*}
-    clock \triangleq &\wedge now' = now + 1 \wedge light\_state_u \wedge motion\_state_u
+    \mathrm{clock} \triangleq &\wedge \mathrm{now'} = \mathrm{now} + 1 \wedge \mathrm{light\_state_u} \wedge \mathrm{motion\_state_u}
 \end{align*}
 
 Apoi, acțiunea indusă de „When motion is detected, turn on the switch”, poate fi descrisă astfel:
 
 \begin{align*}
-    motion\_sensor \triangleq &\wedge \exists s \in MotionStates : (
-        \wedge motion\_state' = s \wedge f_{motion}(s)
-    ) \wedge now_u
+    \mathrm{motion\_sensor} \triangleq &\wedge \exists s \in \mathrm{MotionStates} : (
+        \wedge \mathrm{motion\_state'} = s \wedge f_{\mathrm{motion}}(s)
+    ) \wedge \mathrm{now_u}
 \end{align*}
 
-Unde $f_{motion}$ este definită astfel:
+Unde $f_{\mathrm{motion}}$ este definită astfel:
 \begin{gather*}
-    f_{motion}(x) = \left\{
+    f_{\mathrm{motion}}(x) = \left\{
         \begin{array}{ll}
-              light\_state' = \text{„on”}, & \text{dacă } x = \text{„detected”} \\
-              light\_state_u, & \text{altfel} \\
+              \mathrm{light\_state'} = \text{„on”}, & \text{dacă } x = \text{„detected”} \\
+              \mathrm{light\_state_u}, & \text{altfel} \\
         \end{array} 
         \right. 
 \end{gather*}
@@ -272,43 +272,43 @@ Unde $f_{motion}$ este definită astfel:
 În final, acțiunea care descrie „Every day at midnight, turn off the switch” este următoarea:
 
 \begin{align*}
-    light\_timer \triangleq \wedge f_{time}(now) \wedge motion\_state_u \wedge now_u
+    \mathrm{light\_timer} \triangleq \wedge f_{\mathrm{time}}(\mathrm{now}) \wedge \mathrm{motion\_state_u} \wedge \mathrm{now_u}
 \end{align*}
 
-Unde $f_{time}$ este definită astfel (NB. nu suntem interesați de definiția concretă a funcției $IsMidnight$):
+Unde $f_{\mathrm{time}}$ este definită astfel (NB. nu suntem interesați de definiția concretă a funcției $\mathrm{IsMidnight}$):
 
 \begin{align*}
-    f_{time}(x) = \left\{
+    f_{\mathrm{time}}(x) = \left\{
         \begin{array}{ll}
-              light\_state' = \text{„off”}, & \text{dacă } IsMidnight(x) = true \\
-              light\_state_u, & \text{altfel} \\
+              \mathrm{light\_state'} = \text{„off”}, & \text{dacă } \mathrm{IsMidnight}(x) = true \\
+              \mathrm{light\_state_u}, & \text{altfel} \\
         \end{array} 
         \right. 
 \end{align*}
 
-Putem, acum, să definim acțiunea $Next$ care denotă o tranziție ramificată folosind oricare din acțiunile definite anterior:
+Putem, acum, să definim acțiunea $\mathrm{Next}$ care denotă o tranziție ramificată folosind oricare din acțiunile definite anterior:
 
 \begin{align*}
-    Next \triangleq \vee clock \vee motion\_sensor \vee light\_timer
+    \mathrm{Next} \triangleq \vee \mathrm{clock} \vee \mathrm{motion\_sensor} \vee \mathrm{light\_timer}
 \end{align*}
 
 Proprietatea principală pe care vrem să o respecte sistemul definit este următoarea: „Dacă este detectată mișcare, becul este aprins.”, enunțată formal:
 
 \begin{align*}
-    MotionLightValid \triangleq (motion\_state = \text{„detected”}) \Rightarrow (light\_state = \text{„on”})
+    \mathrm{MotionLightValid} \triangleq (\mathrm{motion\_state} = \text{„detected”}) \Rightarrow (\mathrm{light\_state} = \text{„on”})
 \end{align*}
 
 În final, putem defini specificația completă a sistemului:
 
 \begin{align*}
-    Spec \triangleq Init \wedge {[}Next{]}_{Vars \wedge MotionLightValid}
+    \mathrm{Spec} \triangleq \mathrm{Init} \wedge {[}\mathrm{Next}{]}_{\mathrm{Vars} \wedge \mathrm{MotionLightValid}}
 \end{align*}
 
 Se poate observa ușor (fără a utiliza un computer) că dacă avem condițiile următoare:
 \begin{gather*}
-    motion\_sensor = \text{„detected”} \wedge IsMidnight(now) = true
+    \mathrm{motion\_sensor} = \text{„detected”} \wedge \mathrm{IsMidnight}(\mathrm{now}) = true,
 \end{gather*}
-, formula $MotionLightValid$ nu va fi satisfăcută, astfel fiind evidențiat un defect în proiectarea sistemului.
+formula $\mathrm{MotionLightValid}$ nu va fi satisfăcută, astfel fiind evidențiat un defect în proiectarea sistemului.
 
 Dacă am considera însă un sistem complex, evaluarea manuală a tuturor stărilor modelului nu este fezabilă. Pentru verificarea automată a modelului, putem folosi limbajele \textit{TLA+} și \textit{PlusCal} proiectate de Laslie Lamport împreună cu software-ul de verificare automată \textit{TLC}. 
 
